@@ -139,13 +139,68 @@
     #contact a,
     .credit a {
       color: #28a745;
-      text-decoration: underline; /* Optional: Add underline for better visibility */
+      text-decoration: underline;
+      /* Optional: Add underline for better visibility */
     }
 
     #contact a:hover,
     .credit a:hover {
       color: #61dafb;
     }
+
+    /* Styles for the gallery */
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      /* Spacing between images */
+    }
+
+    .gallery img {
+      max-width: 300px;
+      /* Adjust as needed */
+      height: auto;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      /* Optional: Nice shadow */
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
+      /* Optional: Slight zoom on hover */
+      transition: transform 0.3s ease;
+    }
+
+    /* Lightbox Styles */
+   .lightbox {
+     display: none; /* Hidden by default */
+     position: fixed; /* Stay in place */
+     z-index: 999; /* Sit on top */
+     left: 0;
+     top: 0;
+     width: 100%;
+     height: 100%;
+     overflow: auto; /* Enable scroll if needed */
+     background-color: rgba(0, 0, 0, 0.8); /* Dark background */
+   }
+
+   .lightbox-content {
+     margin: auto;
+     display: block;
+     max-width: 90%; /* Max width of the image */
+     max-height: 90%; /* Max height of the image */
+   }
+
+   .close-btn {
+     position: absolute;
+     top: 15px;
+     right: 30px;
+     color: white;
+     font-size: 40px;
+     font-weight: bold;
+     cursor: pointer;
+   }
 
     @media (max-width: 600px) {
       body {
@@ -206,12 +261,13 @@
           alt="Profile Image">
         <h1>early<span class="birb-green">BIRB</span>irl</h1>
       </div>
-      <p>Developer | Streamer | Gamer</p>
+      <p>Developer | Streamer | Gamer | Minecraft Pixel Artist</p>
     </header>
 
     <nav>
       <a href="#about" class="tab-link active">About</a>
       <a href="#socials" class="tab-link">Social Media</a>
+      <a href="#gallery" class="tab-link">Gallery</a>
       <a href="#contact" class="tab-link">Contact</a>
     </nav>
 
@@ -238,6 +294,32 @@
       </div>
     </section>
 
+    <section id="gallery" class="section">
+         <h2>Artwork Gallery</h2>
+         <div class="gallery">
+           <a href="#" data-full-src="https://i.imgur.com/Vl38lMv.jpg" class="gallery-link">
+             <img src="https://i.imgur.com/Vl38lMv.jpg" alt="Light Yagami">
+           </a>
+           <a href="#" data-full-src="https://i.imgur.com/0XtE5cZ.jpg" class="gallery-link">
+             <img src="https://i.imgur.com/0XtE5cZ.jpg" alt="Eren Yeager">
+           </a>
+           <a href="#" data-full-src="https://i.imgur.com/nHhzL4T.jpg" class="gallery-link">
+             <img src="https://i.imgur.com/nHhzL4T.jpg" alt="Monkey D. Luffy">
+           </a>
+           <a href="#" data-full-src="https://i.imgur.com/VFqaIHb.jpg" class="gallery-link">
+             <img src="https://i.imgur.com/VFqaIHb.jpg" alt="Gon Freecss">
+           </a>
+           <a href="#" data-full-src="https://i.imgur.com/HGeSzj7.jpg" class="gallery-link">
+             <img src="https://i.imgur.com/HGeSzj7.jpg" alt="Nezuko Kamado">
+           </a>
+         </div>
+       </section>
+
+       <div id="lightbox" class="lightbox">
+         <span class="close-btn">&times;</span>
+         <img src="" alt="Full-size image" class="lightbox-content">
+       </div>
+
     <section id="contact" class="section">
       <h2>Contact Me</h2>
       <p>Email: <a href="mailto:earlybirdirl@gmail.com">earlybirdirl@gmail.com</a></p>
@@ -246,39 +328,11 @@
 
     <footer>
       <p>© 2025 earlyBIRBirl. All rights reserved.</p>
-      <p class="credit">Background image by <a href="https://www.deviantart.com/minimoss" target="_blank">minimoss</a></p>
+      <p class="credit">Background GIF by <a href="https://www.deviantart.com/minimoss" target="_blank">minimoss</a></p>
     </footer>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const tabLinks = document.querySelectorAll('.tab-link');
-      const sections = document.querySelectorAll('.section');
-
-      function showSection(id) {
-        sections.forEach(section => {
-          section.style.display = 'none';
-        });
-        document.getElementById(id.substring(1)).style.display = 'block';
-      }
-
-      function activateTab(link) {
-        tabLinks.forEach(tab => {
-          tab.classList.remove('active');
-        });
-        link.classList.add('active');
-      }
-
-      tabLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const targetId = link.getAttribute('href');
-          showSection(targetId);
-          activateTab(link);
-        });
-      });
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 
 </html>
