@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,38 +16,50 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh; /* Changed height to min-height for content overflow */
     }
+
     header {
-      background-color: rgba(17, 17, 17, 0.8); /* Semi-transparent black */
+      background-color: rgba(17, 17, 17, 0.8);
       color: white;
       padding: 20px;
       text-align: center;
       width: 100%;
+      box-sizing: border-box; /* Added box-sizing */
     }
+
     nav a {
       margin: 0 10px;
       color: #61dafb;
       text-decoration: none;
+      display: block; /* Stack links vertically on small screens */
+      padding: 10px 0; /* Add padding for better touch targets */
     }
+
     nav a:hover {
-      color: #28a745; /* Green on hover */
+      color: #28a745;
     }
+
     .container {
-      padding: 30px;
-      max-width: 800px;
+      padding: 20px; /* Reduced padding for smaller screens */
+      max-width: 95%; /* Increased width for better use of screen */
       width: 100%;
-      background-color: rgba(17, 17, 17, 0.8); /* Dark transparent background */
+      background-color: rgba(17, 17, 17, 0.8);
       border-radius: 10px;
       color: white;
+      box-sizing: border-box; /* Added box-sizing */
     }
+
     .section {
-      margin-bottom: 40px;
+      margin-bottom: 30px; /* Reduced margin for smaller screens */
       text-align: center;
     }
+
     .section h2 {
       color: #fff;
+      font-size: 1.5em; /* Adjusted font size for responsiveness */
     }
+
     .social-icons a {
       margin-right: 15px;
       text-decoration: none;
@@ -54,27 +67,59 @@
       display: inline-flex;
       align-items: center;
     }
+
     .social-icons a:hover {
-      color: #28a745; /* Green on hover */
+      color: #28a745;
     }
+
     .social-icons img {
       width: 24px;
       height: 24px;
       margin-right: 8px;
     }
+
     footer {
       text-align: center;
       padding: 20px;
       background-color: rgba(17, 17, 17, 0.8);
       color: white;
       width: 100%;
+      box-sizing: border-box; /* Added box-sizing */
     }
+
     .credit {
-      font-size: 12px;
+      font-size: 10px; /* Reduced font size for smaller screens */
       color: #ccc;
+    }
+
+    /* Media query for smaller screens (phones) */
+    @media (max-width: 600px) {
+      body {
+        align-items: flex-start; /* Align to top on small screens */
+        background-size: auto 100%; /* Adjust background for better fit */
+        background-position: center top; /* Position background at the top */
+      }
+
+      .container {
+        padding: 15px;
+      }
+
+      nav a {
+        display: block;
+        margin: 5px 0;
+      }
+
+      .section {
+        margin-bottom: 20px;
+      }
+
+      .section h2 {
+        font-size: 1.25em;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <header>
@@ -117,9 +162,10 @@
     </section>
 
     <footer>
-      <p>&copy; 2025 earlyBIRBirl. All rights reserved.</p>
+      <p>© 2025 earlyBIRBirl. All rights reserved.</p>
       <p class="credit">Background image by <a href="https://www.deviantart.com/minimoss" target="_blank">minimoss</a></p>
     </footer>
   </div>
 </body>
+
 </html>
