@@ -5,6 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>earlyBIRBirl.github.io</title>
+  <link rel="icon" href="https://static-cdn.jtvnw.net/jtv_user_pictures/97103744-27f0-44e3-bccf-3cfe863743dd-profile_image-300x300.png"
+    type="image/png">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,7 +18,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh; /* Changed height to min-height for content overflow */
+      min-height: 100vh;
     }
 
     header {
@@ -25,39 +27,80 @@
       padding: 20px;
       text-align: center;
       width: 100%;
-      box-sizing: border-box; /* Added box-sizing */
+      box-sizing: border-box;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      margin-left: 10px;
+      font-size: 2em;
+    }
+
+    .birb-green {
+      color: #28a745;
+    }
+
+    header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      vertical-align: middle;
+    }
+
+    header p {
+      font-size: 1em;
+      margin-top: 0;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
     }
 
     nav a {
       margin: 0 10px;
       color: #61dafb;
       text-decoration: none;
-      display: block; /* Stack links vertically on small screens */
-      padding: 10px 0; /* Add padding for better touch targets */
+      padding: 10px 15px;
+      border-bottom: 2px solid transparent;
     }
 
-    nav a:hover {
+    nav a:hover,
+    nav a.active {
       color: #28a745;
+      border-bottom-color: #28a745;
     }
 
     .container {
-      padding: 20px; /* Reduced padding for smaller screens */
-      max-width: 95%; /* Increased width for better use of screen */
+      padding: 20px;
+      max-width: 95%;
       width: 100%;
       background-color: rgba(17, 17, 17, 0.8);
       border-radius: 10px;
       color: white;
-      box-sizing: border-box; /* Added box-sizing */
+      box-sizing: border-box;
     }
 
     .section {
-      margin-bottom: 30px; /* Reduced margin for smaller screens */
+      margin-bottom: 30px;
       text-align: center;
+      display: none;
+    }
+
+    #about {
+      display: block;
     }
 
     .section h2 {
       color: #fff;
-      font-size: 1.5em; /* Adjusted font size for responsiveness */
+      font-size: 1.5em;
     }
 
     .social-icons a {
@@ -84,24 +127,28 @@
       background-color: rgba(17, 17, 17, 0.8);
       color: white;
       width: 100%;
-      box-sizing: border-box; /* Added box-sizing */
+      box-sizing: border-box;
     }
 
     .credit {
-      font-size: 10px; /* Reduced font size for smaller screens */
+      font-size: 10px;
       color: #ccc;
     }
 
-    /* Media query for smaller screens (phones) */
     @media (max-width: 600px) {
       body {
-        align-items: flex-start; /* Align to top on small screens */
-        background-size: auto 100%; /* Adjust background for better fit */
-        background-position: center top; /* Position background at the top */
+        align-items: flex-start;
+        background-size: auto 100%;
+        background-position: center top;
       }
 
       .container {
         padding: 15px;
+      }
+
+      nav {
+        flex-direction: column;
+        align-items: center;
       }
 
       nav a {
@@ -116,6 +163,25 @@
       .section h2 {
         font-size: 1.25em;
       }
+
+      header {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .header-content {
+        margin-bottom: 5px;
+      }
+
+      header h1 {
+        font-size: 1.5em;
+        margin-left: 5px;
+      }
+
+      header img {
+        width: 30px;
+        height: 30px;
+      }
     }
   </style>
 </head>
@@ -123,14 +189,19 @@
 <body>
   <div class="container">
     <header>
-      <h1>earlyBIRBirl</h1>
+      <div class="header-content">
+        <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/97103744-27f0-44e3-bccf-3cfe863743dd-profile_image-300x300.png"
+          alt="Profile Image">
+        <h1>early<span class="birb-green">BIRB</span>irl</h1>
+      </div>
       <p>Developer | Streamer | Gamer</p>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#socials">Social Media</a>
-        <a href="#contact">Contact</a>
-      </nav>
     </header>
+
+    <nav>
+      <a href="#about" class="tab-link active">About</a>
+      <a href="#socials" class="tab-link">Social Media</a>
+      <a href="#contact" class="tab-link">Contact</a>
+    </nav>
 
     <section id="about" class="section">
       <h2>About Me</h2>
@@ -166,6 +237,36 @@
       <p class="credit">Background image by <a href="https://www.deviantart.com/minimoss" target="_blank">minimoss</a></p>
     </footer>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabLinks = document.querySelectorAll('.tab-link');
+      const sections = document.querySelectorAll('.section');
+
+      function showSection(id) {
+        sections.forEach(section => {
+          section.style.display = 'none';
+        });
+        document.getElementById(id.substring(1)).style.display = 'block';
+      }
+
+      function activateTab(link) {
+        tabLinks.forEach(tab => {
+          tab.classList.remove('active');
+        });
+        link.classList.add('active');
+      }
+
+      tabLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = link.getAttribute('href');
+          showSection(targetId);
+          activateTab(link);
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>
