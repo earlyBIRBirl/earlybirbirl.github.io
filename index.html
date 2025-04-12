@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>earlyBIRBirl.github.io</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="icon" href="https://static-cdn.jtvnw.net/jtv_user_pictures/97103744-27f0-44e3-bccf-3cfe863743dd-profile_image-300x300.png" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
   <style>
@@ -35,7 +35,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 10px;
+      gap: 15px;
+      margin-bottom: 15px;
     }
 
     header h1 {
@@ -218,7 +219,25 @@
         font-size: 1.5em;
       }
     }
-  </style>
+
+    #copy-toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 9999;
+    }
+
+    #copy-toast.show {
+      opacity: 1;
+    }  </style>
 </head>
 
 <body>
@@ -280,7 +299,7 @@
           <i class="fas fa-envelope"></i>
           <span>Email: earlybirdirl@gmail.com</span>
         </a>
-        <div class="block">
+        <div class="block" id="discord-copy" style="cursor: pointer;" title="Click to copy Discord!">
           <i class="fab fa-discord"></i>
           <span>Discord: earlybirbirl</span>
         </div>
@@ -295,26 +314,32 @@
   </div>
 
   <script>
+    const sections = document.querySelectorAll(".section");
     document.querySelectorAll(".tab-link").forEach(link => {
       link.addEventListener("click", function (e) {
         e.preventDefault();
         const targetId = this.getAttribute("href").substring(1);
 
-        document.querySelectorAll(".tab-link").forEach(link => {
-          link.classList.remove("active");
-        });
-
-        document.querySelectorAll(".section").forEach(section => {
-          section.style.display = "none";
-        });
-
+        sections.forEach(sec => sec.style.display = "none");
         document.getElementById(targetId).style.display = "block";
 
+        document.querySelectorAll(".tab-link").forEach(l => l.classList.remove("active"));
         this.classList.add("active");
       });
     });
-  </script>
 
+      document.getElementById("discord-copy").addEventListener("click", function () {
+          const textToCopy = "earlybirbirl";
+          navigator.clipboard.writeText(textToCopy).then(() => {
+            const toast = document.getElementById("copy-toast");
+            toast.classList.add("show");
+            setTimeout(() => {
+              toast.classList.remove("show");
+            }, 2000); // Hide after 2 seconds
+          });
+        });
+  </script>
+  <div id="copy-toast">Copied to clipboard!</div>
 </body>
 
 </html>
