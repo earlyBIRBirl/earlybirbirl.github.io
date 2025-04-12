@@ -5,14 +5,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>earlyBIRBirl.github.io</title>
-  <link rel="icon" href="https://static-cdn.jtvnw.net/jtv_user_pictures/97103744-27f0-44e3-bccf-3cfe863743dd-profile_image-300x300.png"
-    type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="icon" href="https://static-cdn.jtvnw.net/jtv_user_pictures/97103744-27f0-44e3-bccf-3cfe863743dd-profile_image-300x300.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: url('https://i.pinimg.com/originals/7b/e5/a1/7be5a1cb85ca4d0483c1ff17a487d50a.gif') no-repeat center center fixed;
+      font-family: 'Fira Code', monospace;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://i.pinimg.com/originals/7b/e5/a1/7be5a1cb85ca4d0483c1ff17a487d50a.gif') no-repeat center center fixed;
       background-size: cover;
-      color: #333;
+      color: #e0e0e0;
       margin: 0;
       padding: 0;
       display: flex;
@@ -22,7 +23,7 @@
     }
 
     header {
-      background-color: rgba(17, 17, 17, 0.8);
+      background-color: rgba(24, 24, 24, 0.9);
       color: white;
       padding: 20px;
       text-align: center;
@@ -39,7 +40,8 @@
 
     header h1 {
       margin-left: 10px;
-      font-size: 2em;
+      font-size: 2.2em;
+      letter-spacing: 1px;
     }
 
     .birb-green {
@@ -47,15 +49,14 @@
     }
 
     header img {
-      width: 40px;
-      height: 40px;
+      width: 45px;
+      height: 45px;
       border-radius: 50%;
-      vertical-align: middle;
     }
 
     header p {
       font-size: 1em;
-      margin-top: 0;
+      font-style: italic;
     }
 
     nav {
@@ -65,11 +66,13 @@
     }
 
     nav a {
-      margin: 0 10px;
+      margin: 0 12px;
       color: #61dafb;
       text-decoration: none;
+      font-weight: bold;
       padding: 10px 15px;
       border-bottom: 2px solid transparent;
+      transition: color 0.3s ease, border-color 0.3s ease;
     }
 
     nav a:hover,
@@ -79,13 +82,11 @@
     }
 
     .container {
-      padding: 20px;
-      max-width: 95%;
-      width: 100%;
-      background-color: rgba(17, 17, 17, 0.8);
+      padding: 25px;
+      max-width: 1000px;
+      background-color: rgba(17, 17, 17, 0.9);
       border-radius: 10px;
-      color: white;
-      box-sizing: border-box;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
     }
 
     .section {
@@ -100,158 +101,121 @@
 
     .section h2 {
       color: #fff;
-      font-size: 1.5em;
+      font-size: 1.8em;
+      border-bottom: 2px solid #28a745;
+      display: inline-block;
+      padding-bottom: 5px;
     }
 
-    .social-icons a {
-      margin-right: 15px;
+    .section p {
+      max-width: 600px;
+      margin: 0 auto 10px;
+      line-height: 1.6;
+    }
+
+    .section p a {
+      color: #28a745;
       text-decoration: none;
-      color: #61dafb;
-      display: inline-flex;
-      align-items: center;
+      font-weight: bold;
+      transition: color 0.3s ease;
     }
 
-    .social-icons a:hover {
+    .section p a:hover {
+      color: #28a745;
+      text-shadow: 0 0 5px #28a745, 0 0 10px #28a745;
+      text-decoration: underline;
+    }
+
+    .blocks-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .block {
+      background-color: #222;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 8px;
+      text-align: center;
+      text-decoration: none;
+      min-width: 120px;
+      max-width: 100%;
+      width: fit-content;
+      transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+    }
+
+    .block span {
+      display: block;
+      word-break: break-word;
+    }
+
+    .block:hover {
+      background-color: #333;
+      transform: translateY(-4px);
+    }
+
+    .block i {
+      font-size: 28px;
+      margin-bottom: 8px;
       color: #28a745;
     }
 
-    .social-icons img {
-      width: 24px;
-      height: 24px;
-      margin-right: 8px;
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      padding: 10px;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
     }
 
     footer {
       text-align: center;
       padding: 20px;
-      background-color: rgba(17, 17, 17, 0.8);
+      background-color: rgba(17, 17, 17, 0.9);
       color: white;
-      width: 100%;
-      box-sizing: border-box;
     }
 
     .credit {
-      font-size: 10px;
+      font-size: 12px;
       color: #ccc;
     }
 
-    /* New styles for the links */
-    #contact a,
     .credit a {
       color: #28a745;
-      text-decoration: underline;
-      /* Optional: Add underline for better visibility */
+      text-decoration: none;
     }
 
-    #contact a:hover,
     .credit a:hover {
       color: #61dafb;
     }
 
-    /* Styles for the gallery */
-    .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      /* Spacing between images */
-    }
-
-    .gallery img {
-      max-width: 300px;
-      /* Adjust as needed */
-      height: auto;
-      border-radius: 5px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      /* Optional: Nice shadow */
-    }
-
-    .gallery img:hover {
-      transform: scale(1.05);
-      /* Optional: Slight zoom on hover */
-      transition: transform 0.3s ease;
-    }
-
-    /* Lightbox Styles */
-   .lightbox {
-     display: none; /* Hidden by default */
-     position: fixed; /* Stay in place */
-     z-index: 999; /* Sit on top */
-     left: 0;
-     top: 0;
-     width: 100%;
-     height: 100%;
-     overflow: auto; /* Enable scroll if needed */
-     background-color: rgba(0, 0, 0, 0.8); /* Dark background */
-   }
-
-   .lightbox-content {
-     margin: auto;
-     display: block;
-     max-width: 90%; /* Max width of the image */
-     max-height: 90%; /* Max height of the image */
-     position: absolute; /* Add this */
-     top: 50%;         /* Add this */
-     left: 50%;        /* Add this */
-     transform: translate(-50%, -50%); /* Add this */
-   }
-
-   .close-btn {
-     position: absolute;
-     top: 15px;
-     right: 30px;
-     color: white;
-     font-size: 40px;
-     font-weight: bold;
-     cursor: pointer;
-   }
-
     @media (max-width: 600px) {
-      body {
-        align-items: flex-start;
-        background-size: auto 100%;
-        background-position: center top;
-      }
-
-      .container {
-        padding: 15px;
-      }
-
       nav {
         flex-direction: column;
         align-items: center;
       }
 
       nav a {
-        display: block;
         margin: 5px 0;
       }
 
-      .section {
-        margin-bottom: 20px;
-      }
-
-      .section h2 {
-        font-size: 1.25em;
-      }
-
-      header {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .header-content {
-        margin-bottom: 5px;
+      .block {
+        width: 80%;
       }
 
       header h1 {
         font-size: 1.5em;
-        margin-left: 5px;
-      }
-
-      header img {
-        width: 30px;
-        height: 30px;
       }
     }
   </style>
@@ -261,82 +225,96 @@
   <div class="container">
     <header>
       <div class="header-content">
-        <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/97103744-27f0-44e3-bccf-3cfe863743dd-profile_image-300x300.png"
-          alt="Profile Image">
+        <img src="https://static-cdn.jtvnw.net/jtv_user_pictures/97103744-27f0-44e3-bccf-3cfe863743dd-profile_image-300x300.png" alt="Profile Image">
         <h1>early<span class="birb-green">BIRB</span>irl</h1>
       </div>
       <p>Developer | Streamer | Gamer | Minecraft Pixel Artist</p>
     </header>
 
     <nav>
-      <a href="#about" class="tab-link active">About</a>
+      <a href="#about" class="tab-link active">About Me</a>
       <a href="#socials" class="tab-link">Social Media</a>
-      <a href="#gallery" class="tab-link">Gallery</a>
-      <a href="#contact" class="tab-link">Contact</a>
+      <a href="#gallery" class="tab-link">Art Gallery</a>
+      <a href="#contact" class="tab-link">Contacts</a>
     </nav>
 
     <section id="about" class="section">
       <h2>About Me</h2>
-      <p>
-        I'm a developer and streamer who loves doing random shit and
-        connecting with people through games and streams.
-      </p>
+      <p>Hello!!! I'm a 17 year old self-taught developer/programmer who enjoys coding for fun.</p>
+      <p>I'm still a novice, but I love learning new things that help me improve my skills. If you're interested in a chat, feel free to <a href="#contact" class="tab-link">contact me</a>!</p>
     </section>
 
     <section id="socials" class="section">
       <h2>Social Media</h2>
-      <div class="social-icons">
-        <a href="https://youtube.com/@earlybirbirl" target="_blank">
-          <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube logo"> YouTube
+      <div class="blocks-container">
+        <a href="https://youtube.com/@earlybirbirl" target="_blank" class="block">
+          <i class="fab fa-youtube"></i>
+          <span>YouTube</span>
         </a>
-        <a href="https://twitch.tv/earlybirbirl" target="_blank">
-          <img src="https://cdn-icons-png.flaticon.com/512/5968/5968819.png" alt="Twitch logo"> Twitch
+        <a href="https://twitch.tv/earlybirbirl" target="_blank" class="block">
+          <i class="fab fa-twitch"></i>
+          <span>Twitch</span>
         </a>
-        <a href="https://github.com/earlyBIRBirl" target="_blank">
-          <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub logo"> GitHub
+        <a href="https://github.com/earlyBIRBirl" target="_blank" class="block">
+          <i class="fab fa-github"></i>
+          <span>GitHub</span>
         </a>
       </div>
     </section>
 
     <section id="gallery" class="section">
-         <h2>Artwork Gallery</h2>
-         <div class="gallery">
-           <a href="#" data-full-src="https://i.imgur.com/Vl38lMv.jpg" class="gallery-link">
-             <img src="https://i.imgur.com/Vl38lMv.jpg" alt="Light Yagami">
-           </a>
-           <a href="#" data-full-src="https://i.imgur.com/0XtE5cZ.jpg" class="gallery-link">
-             <img src="https://i.imgur.com/0XtE5cZ.jpg" alt="Eren Yeager">
-           </a>
-           <a href="#" data-full-src="https://i.imgur.com/nHhzL4T.jpg" class="gallery-link">
-             <img src="https://i.imgur.com/nHhzL4T.jpg" alt="Monkey D. Luffy">
-           </a>
-           <a href="#" data-full-src="https://i.imgur.com/VFqaIHb.jpg" class="gallery-link">
-             <img src="https://i.imgur.com/VFqaIHb.jpg" alt="Gon Freecss">
-           </a>
-           <a href="#" data-full-src="https://i.imgur.com/HGeSzj7.jpg" class="gallery-link">
-             <img src="https://i.imgur.com/HGeSzj7.jpg" alt="Nezuko Kamado">
-           </a>
-         </div>
-       </section>
-
-       <div id="lightbox" class="lightbox">
-         <span class="close-btn">&times;</span>
-         <img src="" alt="Full-size image" class="lightbox-content">
-       </div>
+      <h2>Artwork Gallery</h2>
+      <div class="gallery">
+        <img src="https://i.imgur.com/Vl38lMv.jpg" alt="Light Yagami">
+        <img src="https://i.imgur.com/0XtE5cZ.jpg" alt="Eren Yaeger">
+        <img src="https://i.imgur.com/nHhzL4T.jpg" alt="Monkey D. Luffy">
+        <img src="https://i.imgur.com/VFqaIHb.jpg" alt="Gon Freecss">
+        <img src="https://i.imgur.com/HGeSzj7.jpg" alt="Nezuko Kamado">
+      </div>
+    </section>
 
     <section id="contact" class="section">
       <h2>Contact Me</h2>
-      <p>Email: <a href="mailto:earlybirdirl@gmail.com">earlybirdirl@gmail.com</a></p>
-      <p>Discord: earlybirbirl</p>
+      <div class="blocks-container">
+        <a href="mailto:earlybirdirl@gmail.com" class="block">
+          <i class="fas fa-envelope"></i>
+          <span>Email: earlybirdirl@gmail.com</span>
+        </a>
+        <div class="block">
+          <i class="fab fa-discord"></i>
+          <span>Discord: earlybirbirl</span>
+        </div>
+      </div>
     </section>
 
     <footer>
-      <p>© 2025 earlyBIRBirl. All rights reserved.</p>
-      <p class="credit">Background GIF by <a href="https://www.deviantart.com/minimoss" target="_blank">minimoss</a></p>
+      <div class="credit">
+        <p>Background GIF by <a href="https://deviantart.com/minimoss">minimoss</a></p>
+      </div>
     </footer>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    document.querySelectorAll(".tab-link").forEach(link => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute("href").substring(1);
+
+        document.querySelectorAll(".tab-link").forEach(link => {
+          link.classList.remove("active");
+        });
+
+        document.querySelectorAll(".section").forEach(section => {
+          section.style.display = "none";
+        });
+
+        document.getElementById(targetId).style.display = "block";
+
+        this.classList.add("active");
+      });
+    });
+  </script>
+
 </body>
 
 </html>
