@@ -314,32 +314,38 @@
   </div>
 
   <script>
-    const sections = document.querySelectorAll(".section");
-    document.querySelectorAll(".tab-link").forEach(link => {
-      link.addEventListener("click", function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute("href").substring(1);
+    const discordBlock = document.getElementById("discord-copy");
 
-        sections.forEach(sec => sec.style.display = "none");
-        document.getElementById(targetId).style.display = "block";
-
-        document.querySelectorAll(".tab-link").forEach(l => l.classList.remove("active"));
-        this.classList.add("active");
+    discordBlock.addEventListener("click", () => {
+      navigator.clipboard.writeText("earlybirbirl").then(() => {
+        const toast = document.getElementById("copy-toast");
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2000);
       });
     });
-
-      document.getElementById("discord-copy").addEventListener("click", function () {
-          const textToCopy = "earlybirbirl";
-          navigator.clipboard.writeText(textToCopy).then(() => {
-            const toast = document.getElementById("copy-toast");
-            toast.classList.add("show");
-            setTimeout(() => {
-              toast.classList.remove("show");
-            }, 2000); // Hide after 2 seconds
-          });
-        });
   </script>
-  <div id="copy-toast">Copied to clipboard!</div>
+
+  <script>
+    const tabLinks = document.querySelectorAll(".tab-link");
+    const sections = document.querySelectorAll(".section");
+
+    tabLinks.forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+
+        tabLinks.forEach(l => l.classList.remove("active"));
+
+        sections.forEach(s => s.style.display = "none");
+
+        link.classList.add("active");
+
+        const sectionId = link.getAttribute("href").substring(1);
+        document.getElementById(sectionId).style.display = "block";
+      });
+    });
+  </script>
+
+  <div id="copy-toast">Copied Discord: earlybirbirl</div>
 </body>
 
 </html>
