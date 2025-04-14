@@ -5,19 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Personal site of earlyBIRBirl - Developer, Streamer, Minecraft Artist.">
     <title>earlyBIRBirl</title>
-    <link rel="icon" href="assets/profile/profile.png" type="image/png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" href="assets/profile/profile.webp" type="image/png">
+    <link rel="stylesheet" href="assets/fonts/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet"></noscript>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <div class="background-video">
+            <video autoplay loop muted playsinline>
+                <source src="assets/background/background.webm" type="video/webm">
+                Your browser does not support the video tag.
+            </video>
+            <div class="background-overlay"></div>
+        </div>
+        
     <main class="container">
         <header>
             <div class="header-content">
                 <img
-                    src="assets/profile/profile.png"
+                    src="assets/profile/profile.webp"
                     alt="Profile Image of earlyBIRBirl"
                 />
                 <h1>
@@ -60,7 +70,7 @@
                     class="block"
                     rel="noopener noreferrer"
                 >
-                    <i class="fab fa-youtube"></i>
+                    <i class="icon-youtube"></i>
                     <span>YouTube</span>
                 </a>
                 <a
@@ -69,7 +79,7 @@
                     class="block"
                     rel="noopener noreferrer"
                 >
-                    <i class="fab fa-twitch"></i>
+                    <i class="icon-twitch"></i>
                     <span>Twitch</span>
                 </a>
                 <a
@@ -78,7 +88,7 @@
                     class="block"
                     rel="noopener noreferrer"
                 >
-                    <i class="fab fa-github"></i>
+                    <i class="icon-github"></i>
                     <span>GitHub</span>
                 </a>
             </div>
@@ -88,35 +98,35 @@
             <h2>Artwork Gallery</h2>
             <div class="gallery">
                 <img
-                    src="assets/art/yagami.png"
+                    src="assets/art/yagami.webp"
                     alt="Light Yagami"
                     data-lightbox="art-gallery"
                     data-caption="Light Yagami"
                     loading="lazy"
                 />
                 <img
-                    src="assets/art/eren.png"
+                    src="assets/art/eren.webp"
                     alt="Eren Yaeger"
                     data-lightbox="art-gallery"
                     data-caption="Eren Yaeger"
                     loading="lazy"
                 />
                 <img
-                    src="assets/art/luffy.png"
+                    src="assets/art/luffy.webp"
                     alt="Monkey D. Luffy"
                     data-lightbox="art-gallery"
                     data-caption="Monkey D. Luffy"
                     loading="lazy"
                 />
                 <img
-                    src="assets/art/gon.png"
+                    src="assets/art/gon.webp"
                     alt="Gon Freecss"
                     data-lightbox="art-gallery"
                     data-caption="Gon Freecss"
                     loading="lazy"
                 />
                 <img
-                    src="assets/art/nezuko.png"
+                    src="assets/art/nezuko.webp"
                     alt="Nezuko Kamado"
                     data-lightbox="art-gallery"
                     data-caption="Nezuko Kamado"
@@ -129,7 +139,7 @@
             <h2>Contact Me</h2>
             <div class="blocks-container">
                 <a href="mailto:earlybirdirl@gmail.com" class="block">
-                    <i class="fas fa-envelope"></i>
+                    <i class="icon-mail"></i>
                     <span>Email: earlybirdirl@gmail.com</span>
                 </a>
                 <div
@@ -138,7 +148,7 @@
                     style="cursor: pointer;"
                     title="Click to copy Discord!"
                 >
-                    <i class="fab fa-discord"></i>
+                    <i class="icon-discord"></i>
                     <span>Discord: earlybirbirl</span>
                 </div>
             </div>
