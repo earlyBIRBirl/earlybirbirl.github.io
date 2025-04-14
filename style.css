@@ -255,12 +255,17 @@ footer {
 
   .container {
     padding: 15px;
-    width: 95%;
+    width: 80%;
   }
 
   .header-content {
     flex-direction: column;
     text-align: center;
+  }
+
+  header {
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
   header img {
@@ -278,7 +283,9 @@ footer {
   }
 
   .section {
-    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
   }
 
   .section h2 {
