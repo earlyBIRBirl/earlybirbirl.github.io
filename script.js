@@ -1,219 +1,270 @@
-const discordBlock = document.getElementById("discord-copy")
-  , tabLinks = document.querySelectorAll(".tab-link")
-  , sections = document.querySelectorAll(".section")
-  , galleryImages = document.querySelectorAll("#gallery img[data-lightbox]")
-  , themeToggle = document.getElementById("theme-toggle")
-  , body = document.body
-  , LIGHT_THEME_CLASS = "light-mode"
-  , THEME_STORAGE_KEY = "themePreference"
-  , savedTheme = localStorage.getItem(THEME_STORAGE_KEY)
-  , blogPostsContainer = document.getElementById("blog-posts-container")
-  , postsToLoadInitially = 3
-  , postsToLoadOnScroll = 3;
-let triggerElement = null
-  , allBlogPosts = []
-  , postsLoaded = 0
-  , blogTabActive = !1;
+/* ========== DOM ELEMENT REFERENCES ========== */
+// General Elements
+const discordBlock = document.getElementById("discord-copy"),
+      tabLinks = document.querySelectorAll(".tab-link"),
+      sections = document.querySelectorAll(".section"),
+      galleryImages = document.querySelectorAll("#gallery img[data-lightbox]"),
+      themeToggle = document.getElementById("theme-toggle"),
+      body = document.body,
+      blogPostsContainer = document.getElementById("blog-posts-container");
+
+// Theme Configuration
+const LIGHT_THEME_CLASS = "light-mode",
+      THEME_STORAGE_KEY = "themePreference",
+      savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+
+// Blog Post Control
+const postsToLoadInitially = 3,
+      postsToLoadOnScroll = 3;
+let allBlogPosts = [],
+    postsLoaded = 0,
+    blogTabActive = false;
+
+/* ========== LIGHTBOX SETUP ========== */
 const lightbox = document.createElement("div");
-lightbox.id = "lightbox",
-lightbox.setAttribute("role", "dialog"),
+lightbox.id = "lightbox";
+lightbox.setAttribute("role", "dialog");
 lightbox.setAttribute("aria-modal", "true");
+lightbox.setAttribute("aria-labelledby", "lightbox-caption");
+
 const lightboxContent = document.createElement("div");
 lightboxContent.id = "lightbox-content";
+
 const lightboxImg = document.createElement("img");
 lightboxImg.id = "lightbox-img";
+
 const lightboxCaption = document.createElement("p");
-lightboxCaption.id = "lightbox-caption",
-lightbox.setAttribute("aria-labelledby", "lightbox-caption");
+lightboxCaption.id = "lightbox-caption";
+
 const lightboxClose = document.createElement("span");
+lightboxClose.id = "lightbox-close";
+lightboxClose.innerHTML = "×";
+lightboxClose.setAttribute("aria-label", "Close lightbox");
+lightboxClose.setAttribute("tabindex", "0");
+
+lightboxContent.appendChild(lightboxImg);
+lightboxContent.appendChild(lightboxCaption);
+lightbox.appendChild(lightboxContent);
+lightbox.appendChild(lightboxClose);
+document.body.appendChild(lightbox);
+
+/* ========== BLOG POST LOGIC ========== */
+// Load initial blog posts
 function loadInitialBlogPosts() {
-  fetch("blog_posts.json").then(e => e.json()).then(e => {
-    e && e.posts ? (displayBlogPosts((allBlogPosts = e.posts).slice(0, 3)),
-    postsLoaded = Math.min(3, allBlogPosts.length),
-    window.addEventListener("scroll", debouncedHandleScroll)) : blogPostsContainer.innerHTML = "<p>No blog posts found.</p>"
-  }
-  ).catch(e => {
-    console.error("Error fetching or parsing blog_posts.json:", e),
-    blogPostsContainer.innerHTML = "<p>Error loading blog posts.</p>"
-  }
-  )
+  fetch("blog_posts.json")
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.posts) {
+        allBlogPosts = data.posts;
+        displayBlogPosts(allBlogPosts.slice(0, postsToLoadInitially));
+        postsLoaded = Math.min(postsToLoadInitially, allBlogPosts.length);
+        window.addEventListener("scroll", debouncedHandleScroll);
+      } else {
+        blogPostsContainer.innerHTML = "<p>No blog posts found.</p>";
+      }
+    })
+    .catch(err => {
+      console.error("Error fetching blog posts:", err);
+      blogPostsContainer.innerHTML = "<p>Error loading blog posts.</p>";
+    });
 }
-function displayBlogPosts(e) {
-  e.forEach(e => {
-    let t = document.createElement("div");
-    t.classList.add("blog-post");
-    let l = document.createElement("h3");
-    l.textContent = e.title;
-    let o = document.createElement("p");
-    o.classList.add("blog-date"),
-    o.textContent = e.date;
-    let s = document.createElement("p");
-    s.textContent = e.content,
-    t.appendChild(l),
-    t.appendChild(o),
-    t.appendChild(s),
-    blogPostsContainer.appendChild(t)
-  }
-  )
+
+// Render blog posts to the container
+function displayBlogPosts(posts) {
+  posts.forEach(post => {
+    const postDiv = document.createElement("div");
+    postDiv.classList.add("blog-post");
+
+    const title = document.createElement("h3");
+    title.textContent = post.title;
+
+    const date = document.createElement("p");
+    date.classList.add("blog-date");
+    date.textContent = post.date;
+
+    const content = document.createElement("p");
+    content.textContent = post.content;
+
+    postDiv.appendChild(title);
+    postDiv.appendChild(date);
+    postDiv.appendChild(content);
+    blogPostsContainer.appendChild(postDiv);
+  });
 }
-function debounce(e, t) {
-  let l;
-  return function(...o) {
-    clearTimeout(l),
-    l = setTimeout( () => {
-      e.apply(this, o)
-    }
-    , t)
-  }
+
+// Debounce function for scroll
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
 }
+
+// Load more blog posts on scroll
 function handleScroll() {
   if (blogTabActive && window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
     window.removeEventListener("scroll", debouncedHandleScroll);
-    let e = postsLoaded
-      , t = Math.min(postsLoaded + 3, allBlogPosts.length)
-      , l = allBlogPosts.slice(e, t);
-    l.length > 0 && (displayBlogPosts(l),
-    (postsLoaded = t) < allBlogPosts.length && window.addEventListener("scroll", debouncedHandleScroll))
-  }
-}
-lightboxClose.id = "lightbox-close",
-lightboxClose.innerHTML = "\xd7",
-lightboxClose.setAttribute("aria-label", "Close lightbox"),
-lightboxClose.setAttribute("tabindex", "0"),
-lightboxContent.appendChild(lightboxImg),
-lightboxContent.appendChild(lightboxCaption),
-lightbox.appendChild(lightboxContent),
-lightbox.appendChild(lightboxClose),
-document.body.appendChild(lightbox),
-discordBlock.addEventListener("click", () => {
-  navigator.clipboard.writeText("earlybirbirl").then( () => {
-    let e = document.getElementById("copy-toast");
-    e.classList.add("show"),
-    setTimeout( () => e.classList.remove("show"), 2e3)
-  }
-  ).catch(e => {
-    console.error("Failed to copy text: earlybirbirl", e);
-    let t = document.getElementById("copy-toast");
-    t.textContent = "Failed to copy!",
-    t.classList.add("show"),
-    setTimeout( () => {
-      t.classList.remove("show"),
-      t.textContent = "Copied Discord: earlybirbirl"
+    const nextPosts = allBlogPosts.slice(postsLoaded, postsLoaded + postsToLoadOnScroll);
+    if (nextPosts.length > 0) {
+      displayBlogPosts(nextPosts);
+      postsLoaded += nextPosts.length;
+      if (postsLoaded < allBlogPosts.length) {
+        window.addEventListener("scroll", debouncedHandleScroll);
+      }
     }
-    , 2e3)
   }
-  )
 }
-),
-tabLinks.forEach(e => {
-  e.addEventListener("click", t => {
-    t.preventDefault();
-    const targetSectionId = e.getAttribute("href").substring(1);
-    const targetSection = document.getElementById(targetSectionId);
-    const currentActiveSection = document.querySelector('.section:not([style*="display: none"])');
 
-    tabLinks.forEach(e => e.classList.remove("active"));
-    e.classList.add("active");
+const debouncedHandleScroll = debounce(handleScroll, 300);
 
-    if (currentActiveSection && currentActiveSection !== targetSection) {
-      currentActiveSection.style.opacity = 0;
-      currentActiveSection.addEventListener('transitionend', () => {
-        currentActiveSection.style.display = 'none';
-        targetSection.style.display = 'block';
-        // Force a layout reflow before starting the fade-in
-        targetSection.offsetHeight;
+/* ========== LIGHTBOX LOGIC ========== */
+// Open lightbox on image click
+galleryImages.forEach(img => {
+  img.addEventListener("click", event => {
+    triggerElement = event.target;
+    const src = triggerElement.getAttribute("src");
+    const alt = triggerElement.getAttribute("alt");
+    const caption = triggerElement.getAttribute("data-caption");
+
+    lightboxImg.setAttribute("src", src);
+    lightboxImg.setAttribute("alt", alt);
+    lightboxCaption.textContent = caption || "";
+    lightbox.classList.add("show");
+    document.body.style.overflow = "hidden";
+
+    requestAnimationFrame(() => {
+      lightboxClose.focus();
+    });
+  });
+});
+
+// Close lightbox with close button or clicking outside
+lightboxClose.addEventListener("click", closeLightbox);
+lightbox.addEventListener("click", e => {
+  if (e.target === lightbox) closeLightbox();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && lightbox.classList.contains("show")) closeLightbox();
+});
+
+// Close lightbox function
+let triggerElement = null;
+function closeLightbox() {
+  lightbox.style.opacity = 0;
+  setTimeout(() => {
+    lightbox.classList.remove("show");
+    lightbox.style.opacity = "";
+    document.body.style.overflow = "";
+    if (triggerElement) {
+      triggerElement.focus();
+      triggerElement = null;
+    }
+  }, 400);
+}
+
+/* ========== THEME TOGGLE LOGIC ========== */
+function applyTheme(theme) {
+  if (theme === LIGHT_THEME_CLASS) {
+    body.classList.add(LIGHT_THEME_CLASS);
+    themeToggle.innerHTML = "☀️";
+    themeToggle.setAttribute("aria-label", "Switch to dark theme");
+    localStorage.setItem(THEME_STORAGE_KEY, LIGHT_THEME_CLASS);
+  } else {
+    body.classList.remove(LIGHT_THEME_CLASS);
+    themeToggle.innerHTML = "🌙";
+    themeToggle.setAttribute("aria-label", "Switch to light theme");
+    localStorage.removeItem(THEME_STORAGE_KEY);
+  }
+}
+
+if (savedTheme) {
+  applyTheme(savedTheme);
+} else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+  applyTheme(LIGHT_THEME_CLASS);
+} else {
+  applyTheme("dark");
+}
+
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    body.classList.contains(LIGHT_THEME_CLASS)
+      ? applyTheme("dark")
+      : applyTheme(LIGHT_THEME_CLASS);
+  });
+}
+
+/* ========== DISCORD COPY BUTTON LOGIC ========== */
+discordBlock.addEventListener("click", () => {
+  navigator.clipboard.writeText("earlybirbirl").then(() => {
+    const toast = document.getElementById("copy-toast");
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2000);
+  }).catch(err => {
+    console.error("Failed to copy:", err);
+    const toast = document.getElementById("copy-toast");
+    toast.textContent = "Failed to copy!";
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+      toast.textContent = "Copied Discord: earlybirbirl";
+    }, 2000);
+  });
+});
+
+/* ========== TAB SWITCHING LOGIC ========== */
+tabLinks.forEach(link => {
+  link.addEventListener("click", event => {
+    event.preventDefault();
+
+    const targetId = link.getAttribute("href").substring(1);
+    const targetSection = document.getElementById(targetId);
+    const currentSection = document.querySelector(".section:not([style*='display: none'])");
+
+    tabLinks.forEach(t => t.classList.remove("active"));
+    link.classList.add("active");
+
+    if (currentSection && currentSection !== targetSection) {
+      currentSection.style.opacity = 0;
+      currentSection.addEventListener("transitionend", function transition() {
+        currentSection.style.display = "none";
+        targetSection.style.display = "block";
+        targetSection.offsetHeight; // force reflow
         targetSection.style.opacity = 0;
         requestAnimationFrame(() => {
           targetSection.style.opacity = 1;
         });
-        // Remove the event listener after it's triggered
-        currentActiveSection.removeEventListener('transitionend', arguments.callee);
+        currentSection.removeEventListener("transitionend", transition);
       }, { once: true });
-    } else if (!currentActiveSection) {
-      // Handle initial load or if no section is currently visible
-      targetSection.style.display = 'block';
+    } else if (!currentSection) {
+      targetSection.style.display = "block";
       targetSection.style.opacity = 0;
       requestAnimationFrame(() => {
         targetSection.style.opacity = 1;
       });
     }
 
-    if ("blog" === targetSectionId) {
-      blogTabActive = !0;
-      if (0 === allBlogPosts.length) {
+    if (targetId === "blog") {
+      blogTabActive = true;
+      if (allBlogPosts.length === 0) {
         loadInitialBlogPosts();
-      } else if (0 === postsLoaded && allBlogPosts.length > 0) {
-        displayBlogPosts(allBlogPosts.slice(0, 3));
-        postsLoaded = Math.min(3, allBlogPosts.length);
+      } else if (postsLoaded === 0 && allBlogPosts.length > 0) {
+        displayBlogPosts(allBlogPosts.slice(0, postsToLoadInitially));
+        postsLoaded = Math.min(postsToLoadInitially, allBlogPosts.length);
         window.addEventListener("scroll", debouncedHandleScroll);
       }
     } else {
-      blogTabActive = !1;
+      blogTabActive = false;
       window.removeEventListener("scroll", debouncedHandleScroll);
     }
-  }
-  )
-}
-),
-galleryImages.forEach(e => {
-  e.addEventListener("click", e => {
-    triggerElement = e.target;
-    let t = e.target.getAttribute("src")
-      , l = e.target.getAttribute("alt")
-      , o = e.target.getAttribute("data-caption");
-    lightboxImg.setAttribute("src", t),
-    lightboxImg.setAttribute("alt", l),
-    lightboxCaption.textContent = o || "",
-    lightbox.classList.add("show"),
-    document.body.style.overflow = "hidden",
-    requestAnimationFrame( () => {
-      lightboxClose.focus()
-    }
-    )
-  }
-  )
-}
-),
-lightboxClose.addEventListener("click", closeLightbox),
-lightbox.addEventListener("click", e => {
-  e.target === lightbox && closeLightbox()
-}
-),
-document.addEventListener("keydown", e => {
-  "Escape" === e.key && lightbox.classList.contains("show") && closeLightbox()
-}
-),
-themeToggle && themeToggle.addEventListener("click", () => {
-  body.classList.contains(LIGHT_THEME_CLASS) ? applyTheme("dark") : applyTheme(LIGHT_THEME_CLASS)
-}
-);
-const debouncedHandleScroll = debounce(handleScroll, 300);
-function closeLightbox() {
-  lightbox.style.opacity = 0;
-  setTimeout(() => {
-    lightbox.classList.remove("show");
-    document.body.style.overflow = "";
-    triggerElement && (triggerElement.focus(),
-    triggerElement = null);
-    lightbox.style.opacity = "";
-  }, 400);
-}
-function applyTheme(e) {
-  e === LIGHT_THEME_CLASS ? (body.classList.add(LIGHT_THEME_CLASS),
-  themeToggle && (themeToggle.innerHTML = "☀️",
-  themeToggle.setAttribute("aria-label", "Switch to dark theme")),
-  localStorage.setItem(THEME_STORAGE_KEY, LIGHT_THEME_CLASS)) : (body.classList.remove(LIGHT_THEME_CLASS),
-  themeToggle && (themeToggle.innerHTML = "\uD83C\uDF19",
-  themeToggle.setAttribute("aria-label", "Switch to light theme")),
-  localStorage.removeItem(THEME_STORAGE_KEY))
-}
-savedTheme ? applyTheme(savedTheme) : window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? applyTheme(LIGHT_THEME_CLASS) : applyTheme("dark");
+  });
+});
 
-// Ensure the initial section is visible when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-  const initialSection = document.getElementById('about');
+/* ========== INITIAL LOAD: Show First Section ========== */
+document.addEventListener("DOMContentLoaded", () => {
+  const initialSection = document.getElementById("about");
   if (initialSection) {
-    initialSection.style.display = 'block';
+    initialSection.style.display = "block";
     initialSection.style.opacity = 1;
   }
 });
