@@ -3,6 +3,7 @@
   --text-color: #e0e0e0;
   --background-light: #333;
   --background-dark: #222;
+  --body-bg: rgba(0, 0, 0, 0.85);
   --container-bg: rgba(17, 17, 17, 0.9);
   --header-bg: rgba(24, 24, 24, 0.9);
   --nav-color: #61dafb;
@@ -13,7 +14,7 @@
 
 body {
   font-family: 'Fira Code', monospace;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://i.pinimg.com/originals/7b/e5/a1/7be5a1cb85ca4d0483c1ff17a487d50a.gif') no-repeat center center fixed;
+  background: linear-gradient(to bottom, var(--body-bg), var(--body-bg)), url('https://i.pinimg.com/originals/7b/e5/a1/7be5a1cb85ca4d0483c1ff17a487d50a.gif') no-repeat center center fixed;
   background-size: cover;
   color: var(--text-color);
   margin: 0;
