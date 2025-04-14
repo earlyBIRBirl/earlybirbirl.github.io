@@ -195,9 +195,8 @@ function closeLightbox() {
     document.body.style.overflow = "";
     triggerElement && (triggerElement.focus(),
     triggerElement = null);
-    // Optionally reset opacity in case it interferes with showing again
     lightbox.style.opacity = "";
-  }, 400); // 400ms matches the 0.4s transition
+  }, 400);
 }
 function applyTheme(e) {
   e === LIGHT_THEME_CLASS ? (body.classList.add(LIGHT_THEME_CLASS),
