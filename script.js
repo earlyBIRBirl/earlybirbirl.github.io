@@ -7,6 +7,7 @@ const body = document.body;
 const LIGHT_THEME_CLASS = 'light-mode';
 const THEME_STORAGE_KEY = 'themePreference';
 const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+const blogPostsContainer = document.getElementById('blog-posts-container');
 
 // --- Lightbox Elements (Dynamically Created) ---
 // Keep ARIA attributes and tabindex for general accessibility, even without the trap
@@ -124,6 +125,42 @@ if (savedTheme) {
 } else {
     applyTheme('dark'); // Default to dark if no preference saved/detected
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+
+  fetch('blog_posts.json')
+    .then(response => response.json())
+    .then(data => {
+      if (data && data.posts) {
+        data.posts.forEach(post => {
+          const blogPostDiv = document.createElement('div');
+          blogPostDiv.classList.add('blog-post');
+
+          const titleHeading = document.createElement('h3');
+          titleHeading.textContent = post.title;
+
+          const dateParagraph = document.createElement('p');
+          dateParagraph.classList.add('blog-date');
+          dateParagraph.textContent = post.date;
+
+          const contentParagraph = document.createElement('p');
+          contentParagraph.textContent = post.content;
+
+          blogPostDiv.appendChild(titleHeading);
+          blogPostDiv.appendChild(dateParagraph);
+          blogPostDiv.appendChild(contentParagraph);
+
+          blogPostsContainer.appendChild(blogPostDiv);
+        });
+      } else {
+        blogPostsContainer.innerHTML = '<p>No blog posts found.</p>';
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching or parsing blog_posts.json:', error);
+      blogPostsContainer.innerHTML = '<p>Error loading blog posts.</p>';
+    });
+});
 
 // --- Functions ---
 

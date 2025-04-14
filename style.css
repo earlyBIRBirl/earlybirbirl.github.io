@@ -399,6 +399,42 @@ footer {
     opacity: 0.8;
 }
 
+/* --- Blog Section Styles --- */
+#blog .blog-post {
+  background-color: var(--background-block);
+  color: var(--text-color);
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  text-align: left; /* Align blog post text to the left for readability */
+  transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+}
+
+#blog .blog-post h3 {
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 1.5em;
+  transition: color var(--theme-transition-duration) ease;
+}
+
+#blog .blog-post .blog-date {
+  color: var(--credit-color);
+  font-size: 0.9em;
+  margin-bottom: 10px;
+  font-style: italic;
+  transition: color var(--theme-transition-duration) ease;
+}
+
+#blog .blog-post p {
+  line-height: 1.7;
+}
+
+/* Adjust the display of the blog section initially */
+#blog {
+  display: none;
+}
+
 /* Adjust focus outline color based on theme */
 :focus {
   outline: 2px solid var(--primary-color);
