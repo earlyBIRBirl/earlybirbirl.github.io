@@ -5,6 +5,8 @@ discordBlock.addEventListener("click", () => {
     const toast = document.getElementById("copy-toast");
     toast.classList.add("show");
     setTimeout(() => toast.classList.remove("show"), 2000);
+  }).catch(err => {
+  console.error('Failed to copy text: earlybirbirl', err);
   });
 });
 
@@ -72,3 +74,9 @@ function closeLightbox() {
   lightbox.classList.remove('show');
   document.body.style.overflow = '';
 }
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && lightbox.classList.contains('show')) {
+    closeLightbox();
+  }
+});
