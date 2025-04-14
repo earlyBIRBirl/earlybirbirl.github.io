@@ -51,7 +51,7 @@ document.body.appendChild(lightbox);
 /* ========== BLOG POST LOGIC ========== */
 // Load initial blog posts
 function loadInitialBlogPosts() {
-    fetch("blog_posts.json")
+    fetch("assets/blogs/blog_posts.json")
         .then(res => res.json())
         .then(data => {
             if (data && data.posts) {
