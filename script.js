@@ -189,10 +189,15 @@ themeToggle && themeToggle.addEventListener("click", () => {
 );
 const debouncedHandleScroll = debounce(handleScroll, 300);
 function closeLightbox() {
-  lightbox.classList.remove("show"),
-  document.body.style.overflow = "",
-  triggerElement && (triggerElement.focus(),
-  triggerElement = null)
+  lightbox.style.opacity = 0; // Start the fade-out
+  setTimeout(() => {
+    lightbox.classList.remove("show");
+    document.body.style.overflow = "";
+    triggerElement && (triggerElement.focus(),
+    triggerElement = null);
+    // Optionally reset opacity in case it interferes with showing again
+    lightbox.style.opacity = "";
+  }, 400); // 400ms matches the 0.4s transition
 }
 function applyTheme(e) {
   e === LIGHT_THEME_CLASS ? (body.classList.add(LIGHT_THEME_CLASS),
