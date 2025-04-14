@@ -189,7 +189,7 @@ themeToggle && themeToggle.addEventListener("click", () => {
 );
 const debouncedHandleScroll = debounce(handleScroll, 300);
 function closeLightbox() {
-  lightbox.style.opacity = 0; // Start the fade-out
+  lightbox.style.opacity = 0;
   setTimeout(() => {
     lightbox.classList.remove("show");
     document.body.style.overflow = "";
