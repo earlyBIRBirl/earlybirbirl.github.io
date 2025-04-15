@@ -1,13 +1,11 @@
-// js/post-script.js
-
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const postId = urlParams.get('id'); // Get post ID from URL (e.g., post.html?id=123)
+    const postId = urlParams.get('id');
 
     const titleElement = document.getElementById('post-title');
     const dateElement = document.getElementById('post-date');
     const bodyElement = document.getElementById('post-body');
-    const loadingElement = document.querySelector('.loading-placeholder'); // Find loading text
+    const loadingElement = document.querySelector('.loading-placeholder');
 
     if (!titleElement || !dateElement || !bodyElement) {
         console.error("Required post elements not found on page.");
@@ -32,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         // Handle error: No ID provided
         titleElement.textContent = 'Error: Post ID not found in URL.';
-        if(loadingElement) loadingElement.style.display = 'none'; // Hide loading text
+        if(loadingElement) loadingElement.style.display = 'none';
         dateElement.textContent = '';
         bodyElement.textContent = 'Could not load post because the ID is missing from the URL.';
     }
@@ -62,12 +60,12 @@ function fetchSinglePost(id) {
              const post = data.post;
 
              if (post) {
-                if(loadingElement) loadingElement.style.display = 'none'; // Hide loading message
+                if(loadingElement) loadingElement.style.display = 'none';
 
                 // Populate the elements
                 titleElement.textContent = post.title;
-                document.title = post.title + " - earlyBIRBirl"; // Update page title
-                try { // Format date safely
+                document.title = post.title + " - earlyBIRBirl";
+                try {
                     dateElement.textContent = new Date(post.date).toLocaleDateString(undefined, {
                         year: 'numeric', month: 'long', day: 'numeric'
                     });

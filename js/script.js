@@ -13,7 +13,6 @@ const LIGHT_THEME_CLASS = "light-mode";
 const THEME_STORAGE_KEY = "themePreference";
 const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
 const postsToLoadInitially = 3;
-const postsToLoadOnScroll = 3;
 
 /* ========== STATE VARIABLES ========== */
 let allBlogPosts = [];
@@ -22,7 +21,6 @@ let blogTabActive = false;
 let triggerElement = null;
 
 /* ========== LIGHTBOX SETUP ========== */
-// (Keep your existing lightbox setup code here - it's fine)
 const lightbox = document.createElement("div");
 lightbox.id = "lightbox";
 lightbox.setAttribute("role", "dialog");
@@ -45,14 +43,76 @@ lightbox.appendChild(lightboxContent);
 lightbox.appendChild(lightboxClose);
 document.body.appendChild(lightbox);
 
+/* ========== CORE NAVIGATION & DISPLAY LOGIC ========== */
+/**
+ * Activates a specific tab and displays the corresponding section.
+ * @param {string} targetId - The ID of the section to activate (e.g., 'about', 'blog').
+ */
+function activateTab(targetId) {
+    // Use 'about' as default if targetId is invalid or missing
+    const effectiveTargetId = targetId && document.getElementById(targetId) ? targetId : 'about';
+    const targetSection = document.getElementById(effectiveTargetId);
+    const targetLink = document.querySelector(`a.tab-link[href="#${effectiveTargetId}"]`);
 
-/* ========== BLOG POST LOGIC (MODIFIED FOR LIST VIEW) ========== */
+    console.log(`Activating section: ${effectiveTargetId}`);
 
+    if (!targetSection || !targetLink) {
+        console.error(`Could not find section or link for default ID: ${effectiveTargetId}`);
+        return;
+    }
+
+    // Update active class on navigation links
+    tabLinks.forEach(t => t.classList.remove("active"));
+    targetLink.classList.add("active");
+
+    // Hide all sections instantly before showing the target
+    sections.forEach(section => {
+        section.style.display = "none";
+        section.style.opacity = 0;
+    });
+
+    // Show the target section and fade it in
+    targetSection.style.display = "block";
+    requestAnimationFrame(() => {
+        targetSection.style.opacity = 1;
+    });
+
+    // --- Handle Blog Tab Activation ---
+    if (effectiveTargetId === "blog") {
+        blogTabActive = true;
+        // Load blog post LIST if it hasn't been loaded yet
+        if (allBlogPosts.length === 0 && postsLoaded === 0) {
+             showBlogWarning("Loading");
+             loadInitialBlogPosts();
+        } else {
+             // Blog list already loaded or attempted, ensure warning is hidden
+             hideBlogWarning();
+        }
+    } else {
+        // --- Logic for Non-Blog Tabs ---
+        blogTabActive = false;
+        hideBlogWarning();
+    }
+}
+
+// --- Browser Back/Forward Listener (popstate) ---
+window.addEventListener('popstate', event => {
+    // event.state might contain the { tabId: targetId } if you pushed it, or be null
+    const currentHash = window.location.hash;
+    let targetId = currentHash.substring(1); // Remove '#'
+
+    // Use the central activateTab function to handle display
+    // activateTab already includes default logic if targetId is empty or invalid
+    console.log(`Popstate event: Navigating to #${targetId || 'about'}`);
+    activateTab(targetId);
+});
+
+/* ========== BLOG POST LOGIC ========== */
 function showBlogWarning(message) {
     if (blogLoadingWarning) {
         blogLoadingWarning.textContent = message;
-        blogLoadingWarning.classList.remove('is-loading'); // Remove dots class by default
-        if (message === "Loading") { // Add dots class only for "Loading"
+        blogLoadingWarning.classList.remove('is-loading');
+        if (message === "Loading") {
             blogLoadingWarning.classList.add('is-loading');
         }
         blogLoadingWarning.style.display = "block";
@@ -74,21 +134,19 @@ function loadInitialBlogPosts() {
     blogPostsContainer.innerHTML = '';
     blogPostsContainer.appendChild(blogLoadingWarning);
 
-    fetch('https://blogdatabase-82x8.onrender.com/api/blog-posts') // Fetches the LIST endpoint
+    fetch('https://blogdatabase-82x8.onrender.com/api/blog-posts')
         .then(response => {
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             return response.json();
         })
         .then(data => {
             console.log("Blog post LIST data received:", data);
-            hideBlogWarning(); // Hide loading warning
+            hideBlogWarning();
 
             if (data && data.posts && data.posts.length > 0) {
-                allBlogPosts = data.posts; // Store the list data
-                displayBlogPostList(allBlogPosts); // Display the LIST
-                postsLoaded = allBlogPosts.length; // Mark all list items as 'loaded' for now
-                // **Remove scroll listener - not needed for simple list**
-                // window.removeEventListener("scroll", debouncedHandleScroll);
+                allBlogPosts = data.posts;
+                displayBlogPostList(allBlogPosts);
+                postsLoaded = allBlogPosts.length;
             } else {
                 allBlogPosts = [];
                 postsLoaded = 0;
@@ -102,18 +160,14 @@ function loadInitialBlogPosts() {
         });
 }
 
-// ** RENAMED & MODIFIED ** : Renders the LIST of blog posts
+// Renders the LIST of blog posts
 function displayBlogPostList(posts) {
      if (!blogPostsContainer) return;
-
-     // Optional: Clear container again before adding list items
-     // blogPostsContainer.innerHTML = '';
-     // blogPostsContainer.appendChild(blogLoadingWarning);
 
     posts.forEach(post => {
         // Create list item elements (e.g., a div or list item)
         const postItem = document.createElement("div");
-        postItem.classList.add("blog-list-item"); // Add a class for styling
+        postItem.classList.add("blog-list-item");
 
         const titleLink = document.createElement("a");
         titleLink.classList.add("blog-list-title");
@@ -123,7 +177,7 @@ function displayBlogPostList(posts) {
 
         const date = document.createElement("p");
         date.classList.add("blog-list-date");
-        date.textContent = post.date; // Already formatted by API
+        date.textContent = post.date;
 
         // Append title link and date to the list item
         postItem.appendChild(titleLink);
@@ -139,7 +193,6 @@ function displayBlogPostList(posts) {
 }
 
 /* ========== LIGHTBOX LOGIC ========== */
-// (Keep your existing lightbox logic: galleryImages.forEach, lightbox listeners, closeLightbox)
 galleryImages.forEach(img => {
     img.addEventListener("click", event => {
         triggerElement = event.target;
@@ -182,7 +235,6 @@ function closeLightbox() {
 
 
 /* ========== THEME TOGGLE LOGIC ========== */
-// (Keep your existing theme toggle logic: applyTheme, listener, initial load check)
 function applyTheme(theme) {
     if (theme === LIGHT_THEME_CLASS) {
         body.classList.add(LIGHT_THEME_CLASS);
@@ -211,7 +263,6 @@ if (themeToggle) {
 
 
 /* ========== DISCORD COPY BUTTON LOGIC ========== */
-// (Keep your existing discord copy logic)
 if (discordBlock) {
     discordBlock.addEventListener("click", () => {
         navigator.clipboard.writeText("earlybirbirl").then(() => {
@@ -238,77 +289,43 @@ if (discordBlock) {
 
 
 /* ========== TAB SWITCHING LOGIC (Minor Adjustments) ========== */
+// --- Tab Click Listener ---
 tabLinks.forEach(link => {
     link.addEventListener("click", event => {
         event.preventDefault();
-
         const targetId = link.getAttribute("href").substring(1);
-        const targetSection = document.getElementById(targetId);
-        if (!targetSection) return;
 
-        // Deactivate/hide others
-        tabLinks.forEach(t => t.classList.remove("active"));
-        sections.forEach(section => {
-            section.style.display = "none";
-            section.style.opacity = 0;
-        });
+        // Activate the tab content visually using the new function
+        activateTab(targetId);
 
-        // Activate/show target
-        link.classList.add("active");
-        targetSection.style.display = "block";
-        requestAnimationFrame(() => { targetSection.style.opacity = 1; });
-
-        // --- Blog Tab Specific Logic ---
-        if (targetId === "blog") {
-            blogTabActive = true;
-            // Load the LIST if it hasn't been loaded yet
-            if (allBlogPosts.length === 0 && postsLoaded === 0) {
-                 showBlogWarning("Loading");
-                 loadInitialBlogPosts(); // This now loads the list
-            } else {
-                 hideBlogWarning(); // List already loaded
-            }
-             // ** REMOVE scroll listener adding **
-             // window.removeEventListener("scroll", debouncedHandleScroll); // Ensure removed
-        } else {
-            // --- Logic for Non-Blog Tabs ---
-            blogTabActive = false;
-             // ** REMOVE scroll listener removing **
-            // window.removeEventListener("scroll", debouncedHandleScroll);
-            hideBlogWarning(); // Hide warning if switching away
+        // Update the URL hash in the browser address bar
+        // Use pushState to allow browser back/forward navigation
+        if (history.pushState) {
+             // Check if the new hash is different from the current one to avoid duplicate history states
+             if (`#${targetId}` !== window.location.hash) {
+                history.pushState({ tabId: targetId }, '', `#${targetId}`);
+             }
         }
     });
 });
 
 /* ========== INITIAL PAGE LOAD ========== */
 document.addEventListener("DOMContentLoaded", () => {
-    // (Keep existing theme application logic)
+    // Apply theme first
     if (savedTheme) { applyTheme(savedTheme); }
     else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) { applyTheme(LIGHT_THEME_CLASS); }
     else { applyTheme('dark'); }
 
-    // Activate initial tab
-    const initialHash = window.location.hash;
-    let initialTabLink = document.querySelector(`a.tab-link[href="${initialHash}"]`);
+    // Determine initial section based on hash or default to 'about'
+    let initialTargetId = window.location.hash.substring(1);
+    // activateTab will handle defaulting to 'about' if initialTargetId is empty or invalid
+    console.log(`Initial load: Activating #${initialTargetId || 'about'}`);
+    activateTab(initialTargetId);
 
-    // Default to #about if hash is missing, invalid, or #blog (let click handle #blog)
-    if (!initialTabLink || initialHash === '#blog') {
-        initialTabLink = document.querySelector('a.tab-link[href="#about"]');
+    if (initialTargetId && history.replaceState) {
+         history.replaceState({ tabId: initialTargetId }, '', `#${initialTargetId}`);
     }
 
-    if (initialTabLink) {
-        initialTabLink.click(); // Trigger click to show section
-    }
-
-    // If specifically landing on #blog hash, trigger its click again to ensure loading starts
-    if (initialHash === '#blog') {
-        const blogTabLink = document.querySelector('a.tab-link[href="#blog"]');
-        if (blogTabLink) blogTabLink.click();
-    } else {
-         hideBlogWarning(); // Ensure warning hidden if not starting on blog
-    }
-
-    // (Keep existing backend ping logic)
     fetch('https://blogdatabase-82x8.onrender.com/')
         .then(response => console.log(`Backend ping: ${response.ok ? 'OK' : 'Failed'}`))
         .catch(error => console.error("Error pinging backend:", error));

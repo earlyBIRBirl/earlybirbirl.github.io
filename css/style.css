@@ -28,9 +28,9 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    transition: color var(--theme-transition-duration) ease; /* Inherits transition */
-    color: var(--text-color); /* Default text color */
-    display: flex; /* For centering content */
+    transition: color var(--theme-transition-duration) ease;
+    color: var(--text-color);
+    display: flex;
 }
 
 body.light-mode {
@@ -541,18 +541,18 @@ footer {
 
 .blog-list-item {
     padding: 15px 0;
-    border-bottom: 1px solid var(--credit-color); /* Separator */
-    text-align: left; /* Align list items left */
+    border-bottom: 1px solid var(--credit-color);
+    text-align: left;
 }
 
 .blog-list-item:last-child {
-    border-bottom: none; /* Remove border on last item */
+    border-bottom: none;
 }
 
 a.blog-list-title {
-    display: block; /* Make link take full width */
+    display: block;
     font-size: 1.3em;
-    color: var(--primary-color); /* Use accent color */
+    color: var(--primary-color);
     text-decoration: none;
     margin-bottom: 5px;
     font-weight: bold;
@@ -563,7 +563,7 @@ a.blog-list-title:hover {
 }
 
 p.blog-list-date {
-    color: var(--credit-color); /* Use theme credit color */
+    color: var(--credit-color);
     font-size: 0.9em;
     margin: 0;
     font-style: italic;
