@@ -51,7 +51,7 @@ document.body.appendChild(lightbox);
 /* ========== BLOG POST LOGIC ========== */
 // Load initial blog posts
 function loadInitialBlogPosts() {
-    fetch('https://pear-imminent-bird.glitch.me/api/blog-posts') // Use the full URL
+    fetch('https://blogdatabase-82x8.onrender.com/api/blog-posts') // Use the full URL
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
