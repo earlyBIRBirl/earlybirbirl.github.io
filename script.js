@@ -51,8 +51,13 @@ document.body.appendChild(lightbox);
 /* ========== BLOG POST LOGIC ========== */
 // Load initial blog posts
 function loadInitialBlogPosts() {
-    fetch("assets/blogs/blog_posts.json")
-        .then(res => res.json())
+    fetch('https://pear-imminent-bird.glitch.me/api/blog-posts') // Use the full URL
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data && data.posts) {
                 allBlogPosts = data.posts;
@@ -63,8 +68,8 @@ function loadInitialBlogPosts() {
                 blogPostsContainer.innerHTML = "<p>No blog posts found.</p>";
             }
         })
-        .catch(err => {
-            console.error("Error fetching blog posts:", err);
+        .catch(error => {
+            console.error("Error fetching blog posts:", error);
             blogPostsContainer.innerHTML = "<p>Error loading blog posts.</p>";
         });
 }
