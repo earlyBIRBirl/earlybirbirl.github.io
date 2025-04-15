@@ -51,7 +51,7 @@ document.body.appendChild(lightbox);
 /* ========== BLOG POST LOGIC ========== */
 // Load initial blog posts
 function loadInitialBlogPosts() {
-    fetch('https://blogdatabase-82x8.onrender.com/api/blog-posts') // Use the full URL
+    fetch('https://blogdatabase-82x8.onrender.com/api/blog-posts') // Use the full Render URL
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -261,11 +261,24 @@ tabLinks.forEach(link => {
     });
 });
 
-/* ========== INITIAL LOAD: Show First Section ========== */
+/* ========== INITIAL LOAD: Show First Section and Ping Backend ========== */
 document.addEventListener("DOMContentLoaded", () => {
     const initialSection = document.getElementById("about");
     if (initialSection) {
         initialSection.style.display = "block";
         initialSection.style.opacity = 1;
     }
+
+    // Ping the backend to wake it up
+    fetch('https://blogdatabase-82x8.onrender.com/') // **REPLACE WITH YOUR RENDER URL**
+        .then(response => {
+            if (response.ok) {
+                console.log("Backend pinged successfully.");
+            } else {
+                console.warn("Backend ping failed to respond during ping.");
+            }
+        })
+        .catch(error => {
+            console.error("Error pinging backend:", error);
+        });
 });
