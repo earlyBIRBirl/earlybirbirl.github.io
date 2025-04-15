@@ -46,18 +46,14 @@ lightbox.appendChild(lightboxClose);
 document.body.appendChild(lightbox);
 
 
-/* ========== BLOG POST LOGIC ========== */
+/* ========== BLOG POST LOGIC (MODIFIED FOR LIST VIEW) ========== */
 
-// Function to show/hide loading warning
 function showBlogWarning(message) {
     if (blogLoadingWarning) {
-        // Set the base message (e.g., "Loading", "Error loading posts")
         blogLoadingWarning.textContent = message;
-        // Add class to trigger CSS animation for dots IF message is "Loading"
-        if (message === "Loading") {
-             blogLoadingWarning.classList.add('is-loading');
-        } else {
-             blogLoadingWarning.classList.remove('is-loading');
+        blogLoadingWarning.classList.remove('is-loading'); // Remove dots class by default
+        if (message === "Loading") { // Add dots class only for "Loading"
+            blogLoadingWarning.classList.add('is-loading');
         }
         blogLoadingWarning.style.display = "block";
         console.log("Showing blog warning:", message);
@@ -72,110 +68,75 @@ function hideBlogWarning() {
     }
 }
 
-// Fetch and display initial blog posts
+// Fetches the list of posts
 function loadInitialBlogPosts() {
-    // Clear previous content (excluding the warning element itself)
+    // Clear previous list content (leave warning element)
     blogPostsContainer.innerHTML = '';
     blogPostsContainer.appendChild(blogLoadingWarning);
 
-    // **Warning is shown by the click handler BEFORE calling this function**
-
-    fetch('https://blogdatabase-82x8.onrender.com/api/blog-posts')
+    fetch('https://blogdatabase-82x8.onrender.com/api/blog-posts') // Fetches the LIST endpoint
         .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             return response.json();
         })
         .then(data => {
-            console.log("Blog post data received:", data);
-            hideBlogWarning();
+            console.log("Blog post LIST data received:", data);
+            hideBlogWarning(); // Hide loading warning
 
             if (data && data.posts && data.posts.length > 0) {
-                allBlogPosts = data.posts;
-                displayBlogPosts(allBlogPosts.slice(0, postsToLoadInitially));
-                postsLoaded = Math.min(postsToLoadInitially, allBlogPosts.length);
-                // Add scroll listener only if more posts exist
-                if (postsLoaded < allBlogPosts.length) {
-                     window.addEventListener("scroll", debouncedHandleScroll);
-                }
+                allBlogPosts = data.posts; // Store the list data
+                displayBlogPostList(allBlogPosts); // Display the LIST
+                postsLoaded = allBlogPosts.length; // Mark all list items as 'loaded' for now
+                // **Remove scroll listener - not needed for simple list**
+                // window.removeEventListener("scroll", debouncedHandleScroll);
             } else {
                 allBlogPosts = [];
                 postsLoaded = 0;
-                // Update warning text, showBlogWarning handles removing dots class
-                showBlogWarning("No blog posts found yet.");
                 blogPostsContainer.insertAdjacentHTML('beforeend', "<p>No blog posts found yet.</p>");
             }
         })
         .catch(error => {
-            console.error("Error fetching blog posts:", error);
-            // Update the warning text directly, which showBlogWarning will handle
-            showBlogWarning("Error loading posts. Please refresh.");
+            console.error("Error fetching blog post list:", error);
+            hideBlogWarning();
             blogPostsContainer.insertAdjacentHTML('beforeend', "<p>Error loading blog posts. Please try refreshing.</p>");
         });
 }
 
-// Render blog posts to the container
-function displayBlogPosts(posts) {
+// ** RENAMED & MODIFIED ** : Renders the LIST of blog posts
+function displayBlogPostList(posts) {
      if (!blogPostsContainer) return;
-    posts.forEach(post => {
-        const postDiv = document.createElement("div");
-        postDiv.classList.add("blog-post");
 
-        const title = document.createElement("h3");
-        title.textContent = post.title;
+     // Optional: Clear container again before adding list items
+     // blogPostsContainer.innerHTML = '';
+     // blogPostsContainer.appendChild(blogLoadingWarning);
+
+    posts.forEach(post => {
+        // Create list item elements (e.g., a div or list item)
+        const postItem = document.createElement("div");
+        postItem.classList.add("blog-list-item"); // Add a class for styling
+
+        const titleLink = document.createElement("a");
+        titleLink.classList.add("blog-list-title");
+        // Link to post.html using the ID from the API
+        titleLink.href = `post.html?id=${post.id}`;
+        titleLink.textContent = post.title;
 
         const date = document.createElement("p");
-        date.classList.add("blog-date");
-         try { // Basic date formatting
-           date.textContent = new Date(post.date).toLocaleDateString(undefined, {
-                year: 'numeric', month: 'long', day: 'numeric'
-           });
-        } catch (e) { date.textContent = post.date; }
+        date.classList.add("blog-list-date");
+        date.textContent = post.date; // Already formatted by API
 
+        // Append title link and date to the list item
+        postItem.appendChild(titleLink);
+        postItem.appendChild(date);
 
-        const content = document.createElement("p");
-        // Simple text content - consider sanitizing if HTML is possible in content
-        content.textContent = post.content;
-
-        postDiv.appendChild(title);
-        postDiv.appendChild(date);
-        postDiv.appendChild(content);
-        // Insert before the warning message if it exists
+        // Append the list item to the container (before the warning)
         if (blogLoadingWarning && blogPostsContainer.contains(blogLoadingWarning)) {
-            blogPostsContainer.insertBefore(postDiv, blogLoadingWarning);
+            blogPostsContainer.insertBefore(postItem, blogLoadingWarning);
         } else {
-            blogPostsContainer.appendChild(postDiv);
+            blogPostsContainer.appendChild(postItem);
         }
     });
 }
-
-// Debounce function
-function debounce(func, wait) {
-    let timeout;
-    return function(...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
-    };
-}
-
-// Load more blog posts on scroll
-function handleScroll() {
-    if (blogTabActive && postsLoaded < allBlogPosts.length && window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
-        window.removeEventListener("scroll", debouncedHandleScroll);
-        const nextPosts = allBlogPosts.slice(postsLoaded, postsLoaded + postsToLoadOnScroll);
-        if (nextPosts.length > 0) {
-            displayBlogPosts(nextPosts);
-            postsLoaded += nextPosts.length;
-            if (postsLoaded < allBlogPosts.length) {
-                 // Re-add listener after a short delay if more posts remain
-                 setTimeout(() => window.addEventListener("scroll", debouncedHandleScroll), 100);
-            }
-        }
-    }
-}
-const debouncedHandleScroll = debounce(handleScroll, 300);
-
 
 /* ========== LIGHTBOX LOGIC ========== */
 // (Keep your existing lightbox logic: galleryImages.forEach, lightbox listeners, closeLightbox)
@@ -276,7 +237,7 @@ if (discordBlock) {
 }
 
 
-/* ========== TAB SWITCHING LOGIC ========== */
+/* ========== TAB SWITCHING LOGIC (Minor Adjustments) ========== */
 tabLinks.forEach(link => {
     link.addEventListener("click", event => {
         event.preventDefault();
@@ -300,21 +261,20 @@ tabLinks.forEach(link => {
         // --- Blog Tab Specific Logic ---
         if (targetId === "blog") {
             blogTabActive = true;
+            // Load the LIST if it hasn't been loaded yet
             if (allBlogPosts.length === 0 && postsLoaded === 0) {
-                 // Use base text "Loading" here
                  showBlogWarning("Loading");
-                 loadInitialBlogPosts();
+                 loadInitialBlogPosts(); // This now loads the list
             } else {
-                 hideBlogWarning();
-                 if (postsLoaded > 0 && postsLoaded < allBlogPosts.length) {
-                    window.removeEventListener("scroll", debouncedHandleScroll);
-                    window.addEventListener("scroll", debouncedHandleScroll);
-                 }
+                 hideBlogWarning(); // List already loaded
             }
+             // ** REMOVE scroll listener adding **
+             // window.removeEventListener("scroll", debouncedHandleScroll); // Ensure removed
         } else {
             // --- Logic for Non-Blog Tabs ---
             blogTabActive = false;
-            window.removeEventListener("scroll", debouncedHandleScroll);
+             // ** REMOVE scroll listener removing **
+            // window.removeEventListener("scroll", debouncedHandleScroll);
             hideBlogWarning(); // Hide warning if switching away
         }
     });
@@ -322,35 +282,33 @@ tabLinks.forEach(link => {
 
 /* ========== INITIAL PAGE LOAD ========== */
 document.addEventListener("DOMContentLoaded", () => {
-    // Apply theme first
-    if (savedTheme) {
-        applyTheme(savedTheme);
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        applyTheme(LIGHT_THEME_CLASS);
-    } else {
-        applyTheme('dark');
-    }
+    // (Keep existing theme application logic)
+    if (savedTheme) { applyTheme(savedTheme); }
+    else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) { applyTheme(LIGHT_THEME_CLASS); }
+    else { applyTheme('dark'); }
 
     // Activate initial tab
     const initialHash = window.location.hash;
     let initialTabLink = document.querySelector(`a.tab-link[href="${initialHash}"]`);
 
-    // If no valid hash or hash is #blog, default to #about
-    if (!initialTabLink) {
+    // Default to #about if hash is missing, invalid, or #blog (let click handle #blog)
+    if (!initialTabLink || initialHash === '#blog') {
         initialTabLink = document.querySelector('a.tab-link[href="#about"]');
     }
 
     if (initialTabLink) {
-        initialTabLink.click();
+        initialTabLink.click(); // Trigger click to show section
     }
 
-    // Initial hide warning (in case HTML didn't hide it and we didn't land on #blog)
-    if (window.location.hash !== "#blog") {
-         hideBlogWarning();
+    // If specifically landing on #blog hash, trigger its click again to ensure loading starts
+    if (initialHash === '#blog') {
+        const blogTabLink = document.querySelector('a.tab-link[href="#blog"]');
+        if (blogTabLink) blogTabLink.click();
+    } else {
+         hideBlogWarning(); // Ensure warning hidden if not starting on blog
     }
 
-
-    // Optional: Ping backend on initial load
+    // (Keep existing backend ping logic)
     fetch('https://blogdatabase-82x8.onrender.com/')
         .then(response => console.log(`Backend ping: ${response.ok ? 'OK' : 'Failed'}`))
         .catch(error => console.error("Error pinging backend:", error));

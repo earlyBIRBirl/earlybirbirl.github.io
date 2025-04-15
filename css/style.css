@@ -484,7 +484,19 @@ footer {
 /* -------------------------------------------------- */
 /* Blog                                               */
 /* -------------------------------------------------- */
-#blog .blog-post {
+#blog {
+    color: var(--text-color);
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    text-align: left;
+    transition: background-color var(--theme-transition-duration) ease,color var(--theme-transition-duration) ease;
+    background-color: var(--background-block);
+}
+
+.blog-post {
     color: var(--text-color);
     padding: 20px;
     margin-bottom: 20px;
@@ -525,6 +537,36 @@ footer {
     66% {
         content: '...';
     }
+}
+
+.blog-list-item {
+    padding: 15px 0;
+    border-bottom: 1px solid var(--credit-color); /* Separator */
+    text-align: left; /* Align list items left */
+}
+
+.blog-list-item:last-child {
+    border-bottom: none; /* Remove border on last item */
+}
+
+a.blog-list-title {
+    display: block; /* Make link take full width */
+    font-size: 1.3em;
+    color: var(--primary-color); /* Use accent color */
+    text-decoration: none;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+a.blog-list-title:hover {
+    text-decoration: underline;
+}
+
+p.blog-list-date {
+    color: var(--credit-color); /* Use theme credit color */
+    font-size: 0.9em;
+    margin: 0;
+    font-style: italic;
 }
 
 /* -------------------------------------------------- */
