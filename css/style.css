@@ -226,6 +226,43 @@ header img {
 }
 
 /* -------------------------------------------------- */
+/* Skills                                             */
+/* -------------------------------------------------- */
+.skills-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.skills-list li {
+  background-color: var(--background-block);
+  color: var(--text-color);
+  padding: 6px 12px;
+  margin: 0;
+  border-radius: 5px;
+  font-size: 0.9em;
+  transition: background-color var(--theme-transition-duration) ease, color var(--theme-transition-duration) ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.skills-list li i {
+  color: var(--primary-color);
+  font-size: 1.1em;
+}
+
+.skills-list li:hover {
+  background-color: var(--background-block-hover);
+  transform: translateY(-1px);
+}
+
+/* -------------------------------------------------- */
 /* Container                                          */
 /* -------------------------------------------------- */
 .container {
@@ -393,6 +430,11 @@ footer {
 
     .section p {
         font-size: .95em
+    }
+
+    .skills-list li {
+      font-size: 0.85em;
+      padding: 5px 10px;
     }
 }
 

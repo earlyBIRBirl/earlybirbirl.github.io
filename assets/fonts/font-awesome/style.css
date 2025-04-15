@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'Icons';
-  src:  url('fonts/Icons.eot?v9mied');
-  src:  url('fonts/Icons.eot?v9mied#iefix') format('embedded-opentype'),
-    url('fonts/Icons.ttf?v9mied') format('truetype'),
-    url('fonts/Icons.woff?v9mied') format('woff'),
-    url('fonts/Icons.svg?v9mied#Icons') format('svg');
+  src:  url('fonts/Icons.eot?6ai9uw');
+  src:  url('fonts/Icons.eot?6ai9uw#iefix') format('embedded-opentype'),
+    url('fonts/Icons.ttf?6ai9uw') format('truetype'),
+    url('fonts/Icons.woff?6ai9uw') format('woff'),
+    url('fonts/Icons.svg?6ai9uw#Icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-js:before {
+  content: "\e905";
+}
+.icon-css:before {
+  content: "\e906";
+}
+.icon-py:before {
+  content: "\e907";
+}
+.icon-html:before {
+  content: "\e908";
+}
 .icon-discord:before {
   content: "\e900";
 }

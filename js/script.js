@@ -44,10 +44,6 @@ lightbox.appendChild(lightboxClose);
 document.body.appendChild(lightbox);
 
 /* ========== CORE NAVIGATION & DISPLAY LOGIC ========== */
-/**
- * Activates a specific tab and displays the corresponding section.
- * @param {string} targetId - The ID of the section to activate (e.g., 'about', 'blog').
- */
 function activateTab(targetId) {
     // Use 'about' as default if targetId is invalid or missing
     const effectiveTargetId = targetId && document.getElementById(targetId) ? targetId : 'about';
