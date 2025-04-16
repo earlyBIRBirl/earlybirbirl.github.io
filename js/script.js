@@ -326,3 +326,54 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => console.log(`Backend ping: ${response.ok ? 'OK' : 'Failed'}`))
         .catch(error => console.error("Error pinging backend:", error));
 });
+
+/* ========== TWITCH LIVE STREAM LOGIC ========== */
+const twitchEmbedContainer = document.getElementById("twitch-embed-container");
+const twitchChannelName = "earlybirbirl";
+
+function checkTwitchLiveStatus() {
+  fetch(`https://api.twitch.tv/helix/streams?user_login=${twitchChannelName}`, {
+    headers: {
+      'Client-ID': '86i28q0ktu0gwarsu9k4pec1yv1azt',
+      'Authorization': 'Bearer t2ibmq2iz9lm47yqb9yzxdxzpralhx'
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      console.error(`Twitch API error: ${response.status}`);
+      return null;
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (data && data.data.length > 0) {
+      // Stream is live
+      twitchEmbedContainer.style.display = "block";
+    } else {
+      // Stream is not live
+      twitchEmbedContainer.style.display = "none";
+    }
+  })
+  .catch(error => {
+    console.error("Error checking Twitch live status:", error);
+    twitchEmbedContainer.style.display = "none"; // Hide on error as well
+  });
+}
+
+// Check the status initially when the Social Media tab is shown
+function handleSocialsTabActivation() {
+  if (window.location.hash === "#socials") {
+    checkTwitchLiveStatus();
+  }
+}
+
+// Call the function when the Social Media tab is activated
+tabLinks.forEach(link => {
+  link.addEventListener("click", event => {
+    const targetId = link.getAttribute("href").substring(1);
+    if (targetId === "socials") {
+      // Delay the check slightly to ensure the section is visible
+      setTimeout(checkTwitchLiveStatus, 300);
+    }
+  });
+});
