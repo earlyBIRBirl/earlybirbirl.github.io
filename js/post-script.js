@@ -43,7 +43,7 @@ function fetchSinglePost(id) {
     const loadingElement = document.querySelector('.loading-placeholder');
 
     // Adjust API URL based on your single-post endpoint structure
-    const apiUrl = `https://blogdatabase-82x8.onrender.com/api/blog-posts/${id}`;
+    const apiUrl = `https://api-kcqc.onrender.com/api/blog-posts/${id}`;
 
     fetch(apiUrl)
         .then(response => {

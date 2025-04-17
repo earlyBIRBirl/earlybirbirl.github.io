@@ -322,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
          history.replaceState({ tabId: initialTargetId }, '', `#${initialTargetId}`);
     }
 
-    fetch('https://api-kcqc.onrender.com/')
+    fetch('https://api-kcqc.onrender.com')
         .then(response => console.log(`Backend ping: ${response.ok ? 'OK' : 'Failed'}`))
         .catch(error => console.error("Error pinging backend:", error));
 });
