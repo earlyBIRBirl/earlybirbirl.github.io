@@ -332,32 +332,41 @@ const twitchEmbedContainer = document.getElementById("twitch-embed-container");
 const twitchChannelName = "earlybirbirl";
 
 function checkTwitchLiveStatus() {
-  fetch(`https://api.twitch.tv/helix/streams?user_login=${twitchChannelName}`, {
-    headers: {
-      'Client-ID': '86i28q0ktu0gwarsu9k4pec1yv1azt',
-      'Authorization': 'Bearer t2ibmq2iz9lm47yqb9yzxdxzpralhx'
-    }
-  })
-  .then(response => {
-    if (!response.ok) {
-      console.error(`Twitch API error: ${response.status}`);
-      return null;
-    }
-    return response.json();
-  })
-  .then(data => {
-    if (data && data.data.length > 0) {
-      // Stream is live
-      twitchEmbedContainer.style.display = "block";
-    } else {
-      // Stream is not live
-      twitchEmbedContainer.style.display = "none";
-    }
-  })
-  .catch(error => {
-    console.error("Error checking Twitch live status:", error);
-    twitchEmbedContainer.style.display = "none"; // Hide on error as well
-  });
+  fetch('/.netlify/functions/twitch-status') // Call your Netlify function
+    .then(response => {
+      if (!response.ok) {
+        console.error(`Server error: ${response.status}`);
+        twitchEmbedContainer.style.display = "none";
+        return null;
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data && data.data && data.data.length > 0) {
+        // Stream is live
+        twitchEmbedContainer.style.display = "block"; // Add this line back
+        // Embed the Twitch player if it's not already embedded
+        if (!twitchEmbedContainer.querySelector('iframe')) {
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://player.twitch.tv/?channel=<span class="math-inline">\{twitchChannelName\}&parent\=</span>{localhost}`;
+          iframe.width = '100%'; // Adjust as needed
+          iframe.height = '360'; // Adjust as needed
+          iframe.style.border = '1px solid red'; // Keep this for testing
+          iframe.allowFullscreen = true;
+          twitchEmbedContainer.appendChild(iframe);
+        }
+      } else {
+        // Stream is not live
+        twitchEmbedContainer.style.display = "none";
+        // Optionally clear the embed container if the stream goes offline
+        twitchEmbedContainer.innerHTML = '';
+      }
+    })
+    .catch(error => {
+      console.error("Error checking Twitch live status:", error);
+      twitchEmbedContainer.style.display = "none"; // Hide on error as well
+      twitchEmbedContainer.innerHTML = ''; // Clear on error too
+    });
 }
 
 // Check the status initially when the Social Media tab is shown
