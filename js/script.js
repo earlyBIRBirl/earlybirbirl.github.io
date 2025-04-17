@@ -332,7 +332,7 @@ const twitchEmbedContainer = document.getElementById("twitch-embed-container");
 const twitchChannelName = "earlybirbirl";
 
 function checkTwitchLiveStatus() {
-  fetch('/.netlify/functions/twitch-status') // Call your Netlify function
+  fetch('../netlify/functions/twitch-status/twitch-status.mjs')
     .then(response => {
       if (!response.ok) {
         console.error(`Server error: ${response.status}`);
@@ -344,28 +344,15 @@ function checkTwitchLiveStatus() {
     .then(data => {
       if (data && data.data && data.data.length > 0) {
         // Stream is live
-        twitchEmbedContainer.style.display = "block"; // Add this line back
-        // Embed the Twitch player if it's not already embedded
-        if (!twitchEmbedContainer.querySelector('iframe')) {
-          const iframe = document.createElement('iframe');
-          iframe.src = `https://player.twitch.tv/?channel=<span class="math-inline">\{twitchChannelName\}&parent\=</span>{window.location.hostname}`;
-          iframe.width = '100%'; // Adjust as needed
-          iframe.height = '360'; // Adjust as needed
-          iframe.style.border = '1px solid red'; // Keep this for testing
-          iframe.allowFullscreen = true;
-          twitchEmbedContainer.appendChild(iframe);
-        }
+        twitchEmbedContainer.style.display = "block";
       } else {
         // Stream is not live
         twitchEmbedContainer.style.display = "none";
-        // Optionally clear the embed container if the stream goes offline
-        twitchEmbedContainer.innerHTML = '';
       }
     })
     .catch(error => {
       console.error("Error checking Twitch live status:", error);
-      twitchEmbedContainer.style.display = "none"; // Hide on error as well
-      twitchEmbedContainer.innerHTML = ''; // Clear on error too
+      twitchEmbedContainer.style.display = "none";
     });
 }
 
