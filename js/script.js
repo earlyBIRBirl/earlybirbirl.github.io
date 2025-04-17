@@ -332,7 +332,7 @@ const twitchEmbedContainer = document.getElementById("twitch-embed-container");
 const twitchChannelName = "earlybirbirl";
 
 function checkTwitchLiveStatus() {
-  fetch('../netlify/functions/twitch-status/twitch-status.mjs')
+  fetch('/.netlify/functions/twitch-status')
     .then(response => {
       if (!response.ok) {
         console.error(`Server error: ${response.status}`);
