@@ -130,7 +130,7 @@ function loadInitialBlogPosts() {
     blogPostsContainer.innerHTML = '';
     blogPostsContainer.appendChild(blogLoadingWarning);
 
-    fetch('https://blogdatabase-82x8.onrender.com/api/blog-posts')
+    fetch('https://api-kcqc.onrender.com/api/blog-posts')
         .then(response => {
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             return response.json();
@@ -322,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
          history.replaceState({ tabId: initialTargetId }, '', `#${initialTargetId}`);
     }
 
-    fetch('https://blogdatabase-82x8.onrender.com/')
+    fetch('https://api-kcqc.onrender.com/')
         .then(response => console.log(`Backend ping: ${response.ok ? 'OK' : 'Failed'}`))
         .catch(error => console.error("Error pinging backend:", error));
 });
@@ -332,7 +332,7 @@ const twitchEmbedContainer = document.getElementById("twitch-embed-container");
 const twitchChannelName = "earlybirbirl";
 
 function checkTwitchLiveStatus() {
-    fetch(`https://blogdatabase-82x8.onrender.com/api/twitch-live-status`)
+    fetch(`https://api-kcqc.onrender.com/api/twitch-live-status`)
         .then(response => {
             if (!response.ok) {
                 console.error(`Flask API error: ${response.status}`);
