@@ -332,30 +332,42 @@ const twitchEmbedContainer = document.getElementById("twitch-embed-container");
 const twitchChannelName = "earlybirbirl";
 
 function checkTwitchLiveStatus() {
-  fetch('/.netlify/functions/twitch-status')
-    .then(response => {
-      if (!response.ok) {
-        console.error(`Server error: ${response.status}`);
-        twitchEmbedContainer.style.display = "none";
-        return null;
-      }
-      return response.json();
-    })
-    .then(data => {
-      if (data && data.data && data.data.length > 0) {
-        // Stream is live
-        twitchEmbedContainer.style.display = "block";
-      } else {
-        // Stream is not live
-        twitchEmbedContainer.style.display = "none";
-      }
-    })
-    .catch(error => {
-      console.error("Error checking Twitch live status:", error);
-      twitchEmbedContainer.style.display = "none";
-    });
+    fetch(`https://blogdatabase-82x8.onrender.com/api/twitch-live-status`)
+        .then(response => {
+            if (!response.ok) {
+                console.error(`Flask API error: ${response.status}`);
+                return null;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.is_live) {
+                // Stream is live
+                twitchEmbedContainer.style.display = "block";
+                // Embed the Twitch player if it's not already embedded
+                if (!twitchEmbedContainer.querySelector('iframe')) {
+                    const iframe = document.createElement('iframe');
+                    iframe.src = `https://player.twitch.tv/?channel=<span class="math-inline">\{twitchChannelName\}&parent\=</span>{window.location.hostname}`;
+                    iframe.width = '100%';
+                    iframe.height = '360';
+                    iframe.allowFullscreen = true;
+                    twitchEmbedContainer.appendChild(iframe);
+                }
+            } else {
+                // Stream is not live or error occurred
+                twitchEmbedContainer.style.display = "none";
+                twitchEmbedContainer.innerHTML = '';
+                if (data && data.error) {
+                    console.error("Error from Flask API:", data.error);
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error checking Twitch live status:", error);
+            twitchEmbedContainer.style.display = "none";
+            twitchEmbedContainer.innerHTML = '';
+        });
 }
-
 // Check the status initially when the Social Media tab is shown
 function handleSocialsTabActivation() {
   if (window.location.hash === "#socials") {
