@@ -348,7 +348,7 @@ function checkTwitchLiveStatus() {
         // Embed the Twitch player if it's not already embedded
         if (!twitchEmbedContainer.querySelector('iframe')) {
           const iframe = document.createElement('iframe');
-          iframe.src = `https://player.twitch.tv/?channel=<span class="math-inline">\{twitchChannelName\}&parent\=</span>{localhost}`;
+          iframe.src = `https://player.twitch.tv/?channel=<span class="math-inline">\{twitchChannelName\}&parent\=</span>{window.location.hostname}`;
           iframe.width = '100%'; // Adjust as needed
           iframe.height = '360'; // Adjust as needed
           iframe.style.border = '1px solid red'; // Keep this for testing
