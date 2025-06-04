@@ -72,23 +72,6 @@ function activateTab(targetId) {
     requestAnimationFrame(() => {
         targetSection.style.opacity = 1;
     });
-
-    // --- Handle Blog Tab Activation ---
-    if (effectiveTargetId === "blog") {
-        blogTabActive = true;
-        // Load blog post LIST if it hasn't been loaded yet
-        if (allBlogPosts.length === 0 && postsLoaded === 0) {
-             showBlogWarning("Loading");
-             loadInitialBlogPosts();
-        } else {
-             // Blog list already loaded or attempted, ensure warning is hidden
-             hideBlogWarning();
-        }
-    } else {
-        // --- Logic for Non-Blog Tabs ---
-        blogTabActive = false;
-        hideBlogWarning();
-    }
 }
 
 // --- Browser Back/Forward Listener (popstate) ---
@@ -102,91 +85,6 @@ window.addEventListener('popstate', event => {
     console.log(`Popstate event: Navigating to #${targetId || 'about'}`);
     activateTab(targetId);
 });
-
-/* ========== BLOG POST LOGIC ========== */
-function showBlogWarning(message) {
-    if (blogLoadingWarning) {
-        blogLoadingWarning.textContent = message;
-        blogLoadingWarning.classList.remove('is-loading');
-        if (message === "Loading") {
-            blogLoadingWarning.classList.add('is-loading');
-        }
-        blogLoadingWarning.style.display = "block";
-        console.log("Showing blog warning:", message);
-    }
-}
-
-function hideBlogWarning() {
-    if (blogLoadingWarning) {
-        blogLoadingWarning.style.display = "none";
-        blogLoadingWarning.classList.remove('is-loading');
-        console.log("Hiding blog warning");
-    }
-}
-
-// Fetches the list of posts
-function loadInitialBlogPosts() {
-    // Clear previous list content (leave warning element)
-    blogPostsContainer.innerHTML = '';
-    blogPostsContainer.appendChild(blogLoadingWarning);
-
-    fetch('https://api-kcqc.onrender.com/api/blog-posts')
-        .then(response => {
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            return response.json();
-        })
-        .then(data => {
-            console.log("Blog post LIST data received:", data);
-            hideBlogWarning();
-
-            if (data && data.posts && data.posts.length > 0) {
-                allBlogPosts = data.posts;
-                displayBlogPostList(allBlogPosts);
-                postsLoaded = allBlogPosts.length;
-            } else {
-                allBlogPosts = [];
-                postsLoaded = 0;
-                blogPostsContainer.insertAdjacentHTML('beforeend', "<p>No blog posts found yet.</p>");
-            }
-        })
-        .catch(error => {
-            console.error("Error fetching blog post list:", error);
-            hideBlogWarning();
-            blogPostsContainer.insertAdjacentHTML('beforeend', "<p>Error loading blog posts. Please try refreshing.</p>");
-        });
-}
-
-// Renders the LIST of blog posts
-function displayBlogPostList(posts) {
-     if (!blogPostsContainer) return;
-
-    posts.forEach(post => {
-        // Create list item elements (e.g., a div or list item)
-        const postItem = document.createElement("div");
-        postItem.classList.add("blog-list-item");
-
-        const titleLink = document.createElement("a");
-        titleLink.classList.add("blog-list-title");
-        // Link to post.html using the ID from the API
-        titleLink.href = `post.html?id=${post.id}`;
-        titleLink.textContent = post.title;
-
-        const date = document.createElement("p");
-        date.classList.add("blog-list-date");
-        date.textContent = post.date;
-
-        // Append title link and date to the list item
-        postItem.appendChild(titleLink);
-        postItem.appendChild(date);
-
-        // Append the list item to the container (before the warning)
-        if (blogLoadingWarning && blogPostsContainer.contains(blogLoadingWarning)) {
-            blogPostsContainer.insertBefore(postItem, blogLoadingWarning);
-        } else {
-            blogPostsContainer.appendChild(postItem);
-        }
-    });
-}
 
 /* ========== LIGHTBOX LOGIC ========== */
 galleryImages.forEach(img => {
